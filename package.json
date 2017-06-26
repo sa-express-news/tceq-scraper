@@ -1,0 +1,35 @@
+{
+  "name": "restaurant-inspections",
+  "version": "0.0.1",
+  "description": "Scraper to gather San Antonio restaurant inspections.",
+  "main": "index.js",
+  "scripts": {
+    "build": "./node_modules/.bin/babel src -d build",
+    "start": "node build/index.js",
+    "prestart": "npm run build && npm run test",
+    "flow": "flow",
+    "test": "mocha -w --require babel-polyfill --compilers js:babel-register",
+    "lint": "jshint .",
+    "validate": "npm ls"
+  },
+  "author": "Kia Farhang",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-env": "^1.5.2",
+    "babel-preset-flow": "^6.23.0",
+    "babel-register": "^6.24.1",
+    "chai": "^4.0.2",
+    "chai-as-promised": "^7.0.0",
+    "flow-bin": "^0.48.0",
+    "mocha": "^3.4.2",
+    "precommit-hook": "^3.0.0"
+  },
+  "dependencies": {
+    "jsdom": "^11.0.0"
+  },
+  "pre-commit": [
+    "flow"
+  ]
+}
