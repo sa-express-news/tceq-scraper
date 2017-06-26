@@ -16,9 +16,48 @@ export function parseInspection(url: string) {
 
                     inspection.trackingNumber = extractIntegerFromString(page.getElementsByClassName('waciListTitle')[0].textContent);
 
-                    inspection.dateReceived = new Date();
+                    const htmlCollection = page.getElementsByClassName('waciListValue');
+
+                    const values = Object.values(htmlCollection).map((element: any)=>{
+                        return element.textContent;
+                    });
+
+                    inspection.dateReceived = new Date(values[0]);
+
+                    inspection.numberComplaining = parseInt(values[1]);
+
+                    inspection.status = values[2];
+
+                    inspection.statusDate = new Date(values[3]);
+
+                    inspection.nature = values[4];
+
+                    inspection.frequency = values[5];
+
+                    inspection.duration = values[6];
+
+                    inspection.media = values[7];
+
+                    inspection.program = values[8];
+
+                    inspection.priority = values[9];
+
+                    inspection.effect = values[10];
+
+                    inspection.receivingWater = values[11];
+
+                    inspection.regulatedEntity = values[12];
+
+                    inspection.county = values[13];
+
+                    inspection.description = values[14];
+
+                    inspection.comment = values[15];
+
+                    inspection.actionTaken = values[16];
 
                     return inspection;
+
 
 
                 }));
@@ -27,12 +66,12 @@ export function parseInspection(url: string) {
     });
 }
 
-export function extractInformation(page: Object) {
-    if (Object.prototype.toString.call(page) !== "[object Document]") {
+// export function extractInformation(page: Object) {
+//     if (Object.prototype.toString.call(page) !== "[object Document]") {
 
-        throw Error('variable passed to extractInformation is not a Document object');
-    } else {
+//         throw Error('variable passed to extractInformation is not a Document object');
+//     } else {
 
 
-    }
-}
+//     }
+// }
