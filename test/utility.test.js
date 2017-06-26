@@ -99,6 +99,10 @@ describe('Utilities', function() {
 
         });
 
+        it('should throw an error if passed a string w/no numbers', function() {
+            assert.throws(() => extractIntegerFromString('hello there'));
+        });
+
         it('should return a number', function() {
 
             assert.isNumber(extractIntegerFromString('111'));

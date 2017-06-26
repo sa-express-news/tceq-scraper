@@ -16,16 +16,16 @@ export function fetchPage(url: string) {
     });
 }
 
-export function pageFromString(str: string) {
-    if (Object.prototype.toString.call(str) !== "[object String]") {
+// export function pageFromString(str: string) {
+//     if (Object.prototype.toString.call(str) !== "[object String]") {
 
-        throw Error('variable passed to pageFromString is not a string');
-    } else{
-        const dom = new JSDOM(string);
-        console.log(dom.window.document.getElementsByClassName('waciListValue'));
-        return dom.window.document;
-    }
-}
+//         throw Error('variable passed to pageFromString is not a string');
+//     } else{
+//         const dom = new JSDOM(string);
+//         console.log(dom.window.document.getElementsByClassName('waciListValue'));
+//         return dom.window.document;
+//     }
+// }
 
 export function isString(item: string) {
     return Object.prototype.toString.call(item) === "[object String]";
@@ -36,7 +36,14 @@ export function extractIntegerFromString(str: string) {
 
         throw Error('variable passed to extractNumberFromString is not a string');
     } else {
+        let numbers = str.match(/\d/g);
 
-        return parseInt(str.match(/\d/g).join(''));
+        if (numbers !== null && numbers !== undefined) {
+            const spacesRemoved = numbers.join('');
+            return parseInt(spacesRemoved);
+
+        } else {
+            throw Error('string passed to extractNumberFromString contains no numbers');
+        }
     }
 }
