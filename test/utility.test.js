@@ -11,7 +11,7 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const assert = chai.assert;
 
-import { fetchPage, pageFromString, isString, extractIntegerFromString } from '../src/utility';
+import { fetchPage, pageFromString, isString, extractIntegerFromString, dateFromString } from '../src/utility';
 
 const pageFetcher = fetchPage;
 
@@ -89,7 +89,12 @@ describe('Utilities', function() {
         });
     });
 
-    describe('Number from string extractor', function() {
+    describe('Integer from string extractor', function() {
+
+        it('should exist', function() {
+            assert.isDefined(extractIntegerFromString);
+        });
+
         it('should throw an error if passed a non-string', function() {
 
             assert.throws(() => extractIntegerFromString(5));
@@ -123,5 +128,7 @@ describe('Utilities', function() {
 
         });
     });
+
+
 
 });
