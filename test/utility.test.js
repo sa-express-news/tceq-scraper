@@ -11,7 +11,7 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const assert = chai.assert;
 
-import { fetchPage, pageFromString, isString, extractIntegerFromString, dateFromString } from '../src/utility';
+import { fetchPage, pageFromString, isString, extractIntegerFromString, dateFromString, isNullOrUndefined, convertKeysToUnderscores } from '../src/utility';
 
 const pageFetcher = fetchPage;
 
@@ -129,6 +129,69 @@ describe('Utilities', function() {
         });
     });
 
+    describe('Null/undefined checker', function() {
+        it('should exist', function() {
+            assert.isDefined(isNullOrUndefined);
+        });
+
+        it('should return true if value is null or defined', function() {
+
+            assert.isTrue(isNullOrUndefined(null));
+            assert.isTrue(isNullOrUndefined(undefined));
+
+        });
+
+        it('should return false for all other values', function() {
+
+            assert.isNotTrue(isNullOrUndefined(true));
+            assert.isNotTrue(isNullOrUndefined(false));
+            assert.isNotTrue(isNullOrUndefined(0));
+            assert.isNotTrue(isNullOrUndefined('hello'));
+            assert.isNotTrue(isNullOrUndefined([true, 'false']));
+            assert.isNotTrue(isNullOrUndefined({ foo: 'bar' }));
+            assert.isNotTrue(isNullOrUndefined(new Date()));
+
+        });
+    });
+
+    describe('Object key camelcase to underscore', function() {
+        it('should exist', function() {
+            assert.isDefined(convertKeysToUnderscores);
+        });
+
+        it('should throw an error if passed a non-object', function() {
+            assert.throws(() => convertKeysToUnderscores(5));
+            assert.throws(() => convertKeysToUnderscores([5, 'foo', 'bar']));
+            assert.throws(() => convertKeysToUnderscores(100));
+            assert.throws(() => convertKeysToUnderscores(null));
+        });
+
+        it('should return an object', function() {
+            assert.isObject(convertKeysToUnderscores({ foo: 'bar' }));
+        });
+
+        it('should change all camelCase properties to underscores', function() {
+            const object = { fooBar: 'baz', bigLongPropertyName: [0, 1] }
+            const expected = { foo_bar: 'baz', big_long_property_name: [0, 1] }
+            assert.deepEqual(convertKeysToUnderscores(object), expected);
+        });
+
+        it('should not change non-camelcase property names', function(){
+            const object = {
+                foo: 'bar',
+                date: 500,
+                shouldChange: [1,2,3]
+            };
+
+            const expected = {
+                foo: 'bar',
+                date: 500,
+                should_change: [1,2,3],
+            };
+
+            assert.deepEqual(convertKeysToUnderscores(object), expected);
+        })
+    })
 
 
 });

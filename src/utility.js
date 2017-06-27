@@ -47,3 +47,38 @@ export function extractIntegerFromString(str: string) {
         }
     }
 }
+
+export function isNullOrUndefined(value: any) {
+    return value === null || value === undefined;
+}
+
+export function convertKeysToUnderscores(object: Object) {
+    if (Object.prototype.toString.call(object) !== '[object Object]') {
+        throw Error('variable passed to convertKeysToUnderscores is not an object');
+    } else {
+
+        const entries = Object.entries(object);
+
+        const entries_underscores = entries.map((entry) => {
+            let currentKey = entry[0];
+            let match = currentKey.match((/\w*[A-Z]\w*/));
+
+            if (match !== null && match !== undefined) {
+                let newKey = match[0].split(/(?=[A-Z])/).join('_').toLowerCase();
+                entry[0] = newKey;
+            }
+
+            return entry;
+
+        });
+
+
+        const newObject = {};
+
+        entries_underscores.forEach((entry) => {
+            newObject[entry[0]] = entry[1];
+        });
+
+        return newObject;
+    }
+}
