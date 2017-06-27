@@ -82,3 +82,48 @@ export function convertKeysToUnderscores(object: Object) {
         return newObject;
     }
 }
+
+export function isInspectionObject(object: Object) {
+    if (Object.prototype.toString.call(object) !== '[object Object]') {
+        return false;
+    } else {
+
+        const expectedProperties = [
+            'trackingNumber',
+            'dateReceived',
+            'numberComplaining',
+            'status',
+            'statusDate',
+            'nature',
+            'frequency',
+            'duration',
+            'media',
+            'program',
+            'priority',
+            'effect',
+            'receivingWater',
+            'regulatedEntity',
+            'county',
+            'description',
+            'comment',
+            'actionTaken'
+        ];
+
+        const objectProperties = Object.keys(object);
+
+        if (compareArrays(expectedProperties.sort(), objectProperties.sort())) {
+            return true;
+        } else {
+            return false;
+        }
+
+        function compareArrays(a, b) {
+            return !a.some(function(e, i) {
+                return e != b[i];
+            });
+        }
+
+
+
+    }
+}

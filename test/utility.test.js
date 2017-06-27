@@ -11,7 +11,7 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const assert = chai.assert;
 
-import { fetchPage, pageFromString, isString, extractIntegerFromString, dateFromString, isNullOrUndefined, convertKeysToUnderscores } from '../src/utility';
+import { fetchPage, pageFromString, isString, extractIntegerFromString, dateFromString, isNullOrUndefined, convertKeysToUnderscores, isInspectionObject } from '../src/utility';
 
 const pageFetcher = fetchPage;
 
@@ -176,21 +176,98 @@ describe('Utilities', function() {
             assert.deepEqual(convertKeysToUnderscores(object), expected);
         });
 
-        it('should not change non-camelcase property names', function(){
+        it('should not change non-camelcase property names', function() {
             const object = {
                 foo: 'bar',
                 date: 500,
-                shouldChange: [1,2,3]
+                shouldChange: [1, 2, 3]
             };
 
             const expected = {
                 foo: 'bar',
                 date: 500,
-                should_change: [1,2,3],
+                should_change: [1, 2, 3],
             };
 
             assert.deepEqual(convertKeysToUnderscores(object), expected);
         })
+    });
+
+    describe('Inspection object tester', function() {
+        it('should exist', function() {
+            assert.isDefined(isInspectionObject);
+        });
+
+        it('should return false when passed a non-object', function() {
+            assert.isFalse(isInspectionObject('foo'));
+            assert.isFalse(isInspectionObject(500));
+            assert.isFalse(isInspectionObject([1, 2, 3]));
+            assert.isFalse(isInspectionObject(new Date()));
+            assert.isFalse(isInspectionObject(function() {
+                return true
+            }));
+        });
+    });
+
+    it('should return false if the object does not have every property needed', function() {
+        const badObject = {
+            dateReceived: new Date(),
+            trackingNumber: 1555,
+            numberComplaining: 1
+        };
+
+        assert.isFalse(isInspectionObject(badObject));
+    });
+
+    it('should return false if the object has the keys PLUS unwanted ones', function() {
+        const tooMuch = {
+            trackingNumber: 1555,
+            dateReceived: new Date(),
+            numberComplaining: 1,
+            status: 'Good',
+            statusDate: new Date(),
+            nature: 'foo',
+            frequency: 'foo',
+            duration: 'foo',
+            media: 'foo',
+            program: 'foo',
+            priority: 'foo',
+            effect: 'foo',
+            receivingWater: 'foo',
+            regulatedEntity: 'foo',
+            county: 'foo',
+            description: 'foo',
+            comment: 'foo',
+            actionTaken: 'foo',
+            extra: 'foo'
+        };
+
+        assert.isFalse(isInspectionObject(tooMuch));
+    });
+
+    it('should retun true if the object has only the keys desired', function() {
+        const justRight = {
+            trackingNumber: 1555,
+            dateReceived: new Date(),
+            numberComplaining: 1,
+            status: 'Good',
+            statusDate: new Date(),
+            nature: 'foo',
+            frequency: 'foo',
+            duration: 'foo',
+            media: 'foo',
+            program: 'foo',
+            priority: 'foo',
+            effect: 'foo',
+            receivingWater: 'foo',
+            regulatedEntity: 'foo',
+            county: 'foo',
+            description: 'foo',
+            comment: 'foo',
+            actionTaken: 'foo'
+        };
+
+        assert.isTrue(isInspectionObject(justRight));
     })
 
 
