@@ -6,3 +6,6 @@
 
 #npm error log
 npm-debug.log*
+
+#environment variables
+.env

@@ -27,6 +27,7 @@
     "precommit-hook": "^3.0.0"
   },
   "dependencies": {
+    "dotenv": "^4.0.0",
     "jsdom": "^11.0.0"
   },
   "pre-commit": [
