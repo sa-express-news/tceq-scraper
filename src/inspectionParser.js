@@ -1,6 +1,6 @@
 // @flow
 
-import { isString, extractIntegerFromString, fetchPage } from './utility';
+import { isString, extractIntegerFromString, fetchPage, isNullOrUndefined, convertKeysToUnderscores } from './utility';
 
 export function parseInspection(url: string) {
     return new Promise((resolve, reject) => {
@@ -42,7 +42,8 @@ export function parseInspection(url: string) {
 
                     inspection.priority = values[9];
 
-                    inspection.effect = values[10];
+                    //Remove ugly tabs and newlines in this property (but still space out separate effects)
+                    inspection.effect = values[10].replace(/\t/g, '').replace(/\n/g, ' ');
 
                     inspection.receivingWater = values[11];
 
@@ -56,6 +57,12 @@ export function parseInspection(url: string) {
 
                     inspection.actionTaken = values[16];
 
+                    const properties = Object.entries(inspection);
+
+                    if(properties.some(isNullOrUndefined)){
+                        return reject('Scraper pulled null or undefined data');
+                    }
+                    
                     return inspection;
 
 

@@ -31,7 +31,7 @@ describe('Inspection Parser', function() {
     });
 
 
-    describe('Result', function() {
+    describe.skip('Result', function() {
 
         this.timeout(1000000);
 
