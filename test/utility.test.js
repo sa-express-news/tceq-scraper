@@ -11,7 +11,7 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const assert = chai.assert;
 
-import { fetchPage, pageFromString, isString, extractIntegerFromString, dateFromString, isNullOrUndefined, convertKeysToUnderscores, isInspectionObject } from '../src/utility';
+import { fetchPage, pageFromString, isString, extractIntegerFromString, dateFromString, isNullOrUndefined, convertKeysToUnderscores, prettyPrintObject, isInspectionObject } from '../src/utility';
 
 const pageFetcher = fetchPage;
 
@@ -191,6 +191,78 @@ describe('Utilities', function() {
 
             assert.deepEqual(convertKeysToUnderscores(object), expected);
         })
+    });
+
+    describe('Object pretty printer', function() {
+
+        const testObject = {
+            trackingNumber: 259738,
+            dateReceived: new Date(),
+            numberComplaining: 1,
+            status: 'CLOSED',
+            statusDate: new Date(),
+            nature: 'DUST',
+            frequency: 'CURRENT',
+            duration: '',
+            media: 'AIR',
+            program: ' AIR QUALITY - HIGH LEVEL',
+            priority: 'Within   1 Working Day',
+            effect: '  EAGLE FORD SHALE  GENERAL  OIL AND GAS  ',
+            receivingWater: ' ',
+            regulatedEntity: 'ALAMO JUNCTION RAIL PARK TRANSLOAD FACILITY',
+            county: 'BEXAR',
+            description: 'The San Antonio Regional Office received a complaint concerning odor. ',
+            comment: 'More information will be available upon approval of the investigation report.',
+            actionTaken: 'This complaint has been assigned and will be further investigated by an Environmental Investigator.'
+        };
+
+        it('should exist', function() {
+            assert.isDefined(prettyPrintObject);
+        });
+
+        it('should throw an error if passed a non-object', function() {
+            assert.throws(() => prettyPrintObject(5));
+            assert.throws(() => prettyPrintObject([5, 'foo', 'bar']));
+            assert.throws(() => prettyPrintObject(100));
+            assert.throws(() => prettyPrintObject(null));
+        });
+
+        it('should return a string', function() {
+            assert.isString(prettyPrintObject(testObject));
+        });
+
+        it('should add a space between object key and value', function() {
+            let object = { foo: 'bar' };
+            assert.include(prettyPrintObject(object), 'foo: bar');
+        });
+
+        it('should add a newline before each key-value pair, but not the first one', function() {
+            let object = { foo: 'bar', baz: 'test' };
+            assert.strictEqual(prettyPrintObject(object), 'foo: bar\nbaz: test');
+        });
+
+        it('should work with number values', function() {
+            let object = { foo: 15, baz: 1.2 };
+            assert.strictEqual(prettyPrintObject(object), 'foo: 15\nbaz: 1.2');
+        });
+
+        it('should work with date values', function() {
+            let object = { foo: new Date('5/17/17'), bar: new Date('5/18/17') };
+            let expectedString = 'foo: Wed May 17 2017 00:00:00 GMT-0500 (CDT)\nbar: Thu May 18 2017 00:00:00 GMT-0500 (CDT)';
+            assert.strictEqual(prettyPrintObject(object), expectedString);
+        });
+
+        it('should work with array values', function() {
+            let object = { foo: [0, 1], bar: [1, 2] };
+            let expectedString = 'foo: 0,1\nbar: 1,2';
+            assert.strictEqual(prettyPrintObject(object), expectedString);
+        });
+
+        it('should work with nested objects', function() {
+            let object = { foo: { test: 'hello', test2: 'world' }, baz: 'test' }
+            let expectedString = 'foo: {test: hello\ntest2: world}\nbaz: test';
+            assert.strictEqual(prettyPrintObject(object), expectedString);
+        });
     });
 
     describe('Inspection object tester', function() {

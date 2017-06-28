@@ -83,6 +83,27 @@ export function convertKeysToUnderscores(object: Object) {
     }
 }
 
+export function prettyPrintObject(object: Object) {
+    if (Object.prototype.toString.call(object) !== '[object Object]') {
+        throw Error('variable passed to prettyPrintObject is not an object');
+    } else {
+        const entries = Object.entries(object);
+
+        const array = entries.map((entry: any) => {
+            if (Object.prototype.toString.call(entry[1]) === '[object Object]') {
+                entry[1] = `{${prettyPrintObject(entry[1])}}`;
+            }
+            let key = entry[0];
+            let value = entry[1].toString();
+            let string = `\n${key}: ${value}`;
+            return string;
+        });
+
+        //remove the first newline
+        return array.join('').slice(1);
+    }
+}
+
 export function isInspectionObject(object: Object) {
     if (Object.prototype.toString.call(object) !== '[object Object]') {
         return false;
