@@ -1,5 +1,7 @@
 // @flow
 
+'use strict';
+
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 
@@ -29,6 +31,10 @@ export function fetchPage(url: string) {
 
 export function isString(item: string) {
     return Object.prototype.toString.call(item) === "[object String]";
+}
+
+export function isObject(item: Object) {
+    return Object.prototype.toString.call(item) === "[object Object]";
 }
 
 export function extractIntegerFromString(str: string) {
@@ -143,8 +149,43 @@ export function isInspectionObject(object: Object) {
                 return e != b[i];
             });
         }
-
-
-
     }
+}
+
+
+export function createRequestObject(date: Date) {
+    if (Object.prototype.toString.call(date) !== "[object Date]") {
+        throw Error('variable passed to createRequestObject is not a date');
+    } else {
+
+        const millisecondsInADay = 86400000;
+        const dayBefore = new Date(date.getTime() - millisecondsInADay);
+
+        let object = {
+            start_date_month: dayBefore.getMonth() + 1,
+            start_date_day: dayBefore.getDate(),
+            start_date_year: dayBefore.getFullYear(),
+            end_date_month: date.getMonth() + 1,
+            end_date_day: date.getDate(),
+            end_date_year: date.getFullYear(),
+            doit: 'Find'
+        };
+        return object;
+    }
+}
+
+export function deduplicateArray(array: Array < any > ) {
+    if (!Array.isArray(array)) {
+        throw Error('variable passed to deduplicateArray is not an array');
+    } else {
+        let newArray = [];
+        const set = new Set(array);
+        for (let item of set) newArray.push(item);
+        return newArray;
+    }
+
+}
+
+export function isComplaintLink(link: string){
+    return Object.prototype.toString.call(link) === "[object String]" && link.indexOf('index.cfm?fuseaction=home.complaint&incid=') !== -1;
 }

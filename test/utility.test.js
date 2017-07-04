@@ -11,7 +11,7 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const assert = chai.assert;
 
-import { fetchPage, pageFromString, isString, extractIntegerFromString, dateFromString, isNullOrUndefined, convertKeysToUnderscores, prettyPrintObject, isInspectionObject } from '../src/utility';
+import { fetchPage, pageFromString, isString, isObject, extractIntegerFromString, dateFromString, isNullOrUndefined, convertKeysToUnderscores, prettyPrintObject, isInspectionObject, createRequestObject, deduplicateArray, isComplaintLink } from '../src/utility';
 
 const pageFetcher = fetchPage;
 
@@ -84,9 +84,38 @@ describe('Utilities', function() {
             ];
 
             arrayOfStuff.forEach(function(thing) {
-                assert.isNotTrue(isString(thing));
+                assert.isFalse(isString(thing));
             });
         });
+    });
+
+    describe('Object checker', function() {
+
+        it('should exist', function() {
+            assert.isDefined(isObject);
+        });
+
+        it('should return true when passed objects', function() {
+            const arrayOfObjects = [{ foo: 'bar' }, { baz: 'buzz' }, { test: 500 }];
+
+            arrayOfObjects.forEach(function(object) {
+                assert.isTrue(isObject(object));
+            });
+        });
+
+        it('should return false when passed non-objects', function() {
+            const arrayOfStuff = [
+                [1, 2, 3], 'foo', 100, new Date(),
+                function a() {
+                    return null }
+            ];
+
+            arrayOfStuff.forEach(function(thing) {
+                assert.isFalse(isObject(thing));
+            });
+        });
+
+
     });
 
     describe('Integer from string extractor', function() {
@@ -143,13 +172,13 @@ describe('Utilities', function() {
 
         it('should return false for all other values', function() {
 
-            assert.isNotTrue(isNullOrUndefined(true));
-            assert.isNotTrue(isNullOrUndefined(false));
-            assert.isNotTrue(isNullOrUndefined(0));
-            assert.isNotTrue(isNullOrUndefined('hello'));
-            assert.isNotTrue(isNullOrUndefined([true, 'false']));
-            assert.isNotTrue(isNullOrUndefined({ foo: 'bar' }));
-            assert.isNotTrue(isNullOrUndefined(new Date()));
+            assert.isFalse(isNullOrUndefined(true));
+            assert.isFalse(isNullOrUndefined(false));
+            assert.isFalse(isNullOrUndefined(0));
+            assert.isFalse(isNullOrUndefined('hello'));
+            assert.isFalse(isNullOrUndefined([true, 'false']));
+            assert.isFalse(isNullOrUndefined({ foo: 'bar' }));
+            assert.isFalse(isNullOrUndefined(new Date()));
 
         });
     });
@@ -279,68 +308,191 @@ describe('Utilities', function() {
                 return true
             }));
         });
+
+        it('should return false if the object does not have every property needed', function() {
+            const badObject = {
+                dateReceived: new Date(),
+                trackingNumber: 1555,
+                numberComplaining: 1
+            };
+
+            assert.isFalse(isInspectionObject(badObject));
+        });
+
+        it('should return false if the object has the keys PLUS unwanted ones', function() {
+            const tooMuch = {
+                trackingNumber: 1555,
+                dateReceived: new Date(),
+                numberComplaining: 1,
+                status: 'Good',
+                statusDate: new Date(),
+                nature: 'foo',
+                frequency: 'foo',
+                duration: 'foo',
+                media: 'foo',
+                program: 'foo',
+                priority: 'foo',
+                effect: 'foo',
+                receivingWater: 'foo',
+                regulatedEntity: 'foo',
+                county: 'foo',
+                description: 'foo',
+                comment: 'foo',
+                actionTaken: 'foo',
+                extra: 'foo'
+            };
+
+            assert.isFalse(isInspectionObject(tooMuch));
+        });
+
+        it('should retun true if the object has only the keys desired', function() {
+            const justRight = {
+                trackingNumber: 1555,
+                dateReceived: new Date(),
+                numberComplaining: 1,
+                status: 'Good',
+                statusDate: new Date(),
+                nature: 'foo',
+                frequency: 'foo',
+                duration: 'foo',
+                media: 'foo',
+                program: 'foo',
+                priority: 'foo',
+                effect: 'foo',
+                receivingWater: 'foo',
+                regulatedEntity: 'foo',
+                county: 'foo',
+                description: 'foo',
+                comment: 'foo',
+                actionTaken: 'foo'
+            };
+
+            assert.isTrue(isInspectionObject(justRight));
+        });
     });
 
-    it('should return false if the object does not have every property needed', function() {
-        const badObject = {
-            dateReceived: new Date(),
-            trackingNumber: 1555,
-            numberComplaining: 1
-        };
+    describe('Request object creator', function() {
+        it('should exist', function() {
+            assert.isDefined(createRequestObject);
+        });
 
-        assert.isFalse(isInspectionObject(badObject));
+        it('should return an object', function() {
+            assert.isObject(createRequestObject(new Date('6/24/17')));
+        });
+
+        it('should have properties for start/end month/day/year and doit', function() {
+            const result = createRequestObject(new Date('6/24/17'));
+
+            assert.property(result, 'start_date_month');
+            assert.property(result, 'start_date_day');
+            assert.property(result, 'start_date_year');
+            assert.property(result, 'end_date_month');
+            assert.property(result, 'end_date_day');
+            assert.property(result, 'end_date_year');
+            assert.property(result, 'doit');
+        });
+
+        it('should have all date properties be numbers', function() {
+            const result = createRequestObject(new Date('6/24/17'));
+
+            assert.isNumber(result.start_date_month);
+            assert.isNumber(result.start_date_day);
+            assert.isNumber(result.start_date_year);
+            assert.isNumber(result.end_date_month);
+            assert.isNumber(result.end_date_day);
+            assert.isNumber(result.end_date_year);
+        });
+
+        it('should always have the doit property equal Find', function() {
+            const result = createRequestObject(new Date('6/24/17'));
+
+            assert.strictEqual(result.doit, 'Find');
+        });
+
+        it('should properly calculate the start dates', function() {
+            const result = createRequestObject(new Date('6/24/17'));
+
+            assert.strictEqual(result.start_date_month, 6);
+            assert.strictEqual(result.start_date_day, 23);
+            assert.strictEqual(result.start_date_year, 2017);
+        });
+
+        it('should properly calculate the end dates', function() {
+            const result = createRequestObject(new Date('6/24/17'));
+
+            assert.strictEqual(result.end_date_month, 6);
+            assert.strictEqual(result.end_date_day, 24);
+            assert.strictEqual(result.end_date_year, 2017);
+        });
+
+        it('should properly calculate dates across months', function() {
+            const result = createRequestObject(new Date('3/1/17'));
+
+            assert.strictEqual(result.start_date_month, 2);
+            assert.strictEqual(result.start_date_day, 28);
+            assert.strictEqual(result.start_date_year, 2017);
+            assert.strictEqual(result.end_date_month, 3);
+            assert.strictEqual(result.end_date_day, 1);
+            assert.strictEqual(result.end_date_year, 2017);
+        });
+
+        it('should properly calculate dates across years', function() {
+            const result = createRequestObject(new Date('1/1/17'));
+
+            assert.strictEqual(result.start_date_month, 12);
+            assert.strictEqual(result.start_date_day, 31);
+            assert.strictEqual(result.start_date_year, 2016);
+            assert.strictEqual(result.end_date_month, 1);
+            assert.strictEqual(result.end_date_day, 1);
+            assert.strictEqual(result.end_date_year, 2017);
+        });
     });
 
-    it('should return false if the object has the keys PLUS unwanted ones', function() {
-        const tooMuch = {
-            trackingNumber: 1555,
-            dateReceived: new Date(),
-            numberComplaining: 1,
-            status: 'Good',
-            statusDate: new Date(),
-            nature: 'foo',
-            frequency: 'foo',
-            duration: 'foo',
-            media: 'foo',
-            program: 'foo',
-            priority: 'foo',
-            effect: 'foo',
-            receivingWater: 'foo',
-            regulatedEntity: 'foo',
-            county: 'foo',
-            description: 'foo',
-            comment: 'foo',
-            actionTaken: 'foo',
-            extra: 'foo'
-        };
+    describe('Array deduplicator', function() {
 
-        assert.isFalse(isInspectionObject(tooMuch));
+        it('should exist', function() {
+            assert.isDefined(deduplicateArray);
+        });
+
+        it('should throw an error if passed a non-array', function() {
+            assert.throws(() => deduplicateArray('foo'));
+            assert.throws(() => deduplicateArray(5));
+            assert.throws(() => deduplicateArray({ foo: 'bar' }));
+            assert.throws(() => deduplicateArray(null));
+        });
+
+        it('should remove duplicates from an array', function() {
+            const numArray = [0, 1, 0, 1, 0, 1];
+            const dedupNumArray = deduplicateArray(numArray);
+
+            const stringArray = ['foo', 'foo', 'foo', 'bar', 'bar', 'bar'];
+            const dedupStringArray = deduplicateArray(stringArray);
+
+            assert.notDeepEqual(numArray, dedupNumArray);
+            assert.notDeepEqual(stringArray, dedupStringArray);
+        });
     });
 
-    it('should retun true if the object has only the keys desired', function() {
-        const justRight = {
-            trackingNumber: 1555,
-            dateReceived: new Date(),
-            numberComplaining: 1,
-            status: 'Good',
-            statusDate: new Date(),
-            nature: 'foo',
-            frequency: 'foo',
-            duration: 'foo',
-            media: 'foo',
-            program: 'foo',
-            priority: 'foo',
-            effect: 'foo',
-            receivingWater: 'foo',
-            regulatedEntity: 'foo',
-            county: 'foo',
-            description: 'foo',
-            comment: 'foo',
-            actionTaken: 'foo'
-        };
+    describe('Complaint link checker', function(){
+        it('should exist', function(){
+            assert.isDefined(isComplaintLink);
+        });
 
-        assert.isTrue(isInspectionObject(justRight));
-    })
+        it('should return false if the link is not a complaint link', function(){
+            assert.isFalse(isComplaintLink('https://google.com'));
+            assert.isFalse(isComplaintLink([1,2]));
+            assert.isFalse(isComplaintLink('foobar'));
+            assert.isFalse(isComplaintLink(function(){return false}));
+        });
 
+        it('should return true when passed a complaint link', function(){
+            assert.isTrue(isComplaintLink('http://www2.tceq.texas.gov/oce/waci/index.cfm?fuseaction=home.complaint&incid=259738'));
+            assert.isTrue(isComplaintLink('http://www2.tceq.texas.gov/oce/waci/index.cfm?fuseaction=home.complaint&incid=260571'));
+            assert.isTrue(isComplaintLink('http://www2.tceq.texas.gov/oce/waci/index.cfm?fuseaction=home.complaint&incid=259636'));
+            assert.isTrue(isComplaintLink('http://www2.tceq.texas.gov/oce/waci/index.cfm?fuseaction=home.complaint&incid=259669'));
+            assert.isTrue(isComplaintLink('http://www2.tceq.texas.gov/oce/waci/index.cfm?fuseaction=home.complaint&incid=259699'));
+
+        })  
+    });
 
 });
