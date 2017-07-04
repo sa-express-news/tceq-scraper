@@ -1,5 +1,7 @@
 // @flow
 
+'use strict';
+
 import { isString, extractIntegerFromString, fetchPage, isNullOrUndefined, convertKeysToUnderscores } from './utility';
 
 export function parseInspection(url: string) {
@@ -14,13 +16,18 @@ export function parseInspection(url: string) {
 
                     let inspection = {};
 
-                    inspection.trackingNumber = extractIntegerFromString(page.getElementsByClassName('waciListTitle')[0].textContent);
-
                     const htmlCollection = page.getElementsByClassName('waciListValue');
 
-                    const values = Object.values(htmlCollection).map((element: any)=>{
+                    const values = Object.values(htmlCollection).map((element: any) => {
                         return element.textContent;
                     });
+
+                    if (values.length === 0) {
+                        return inspection;
+                    }
+
+                    inspection.trackingNumber = extractIntegerFromString(page.getElementsByClassName('waciListTitle')[0].textContent);
+
 
                     inspection.dateReceived = new Date(values[0]);
 
@@ -59,10 +66,10 @@ export function parseInspection(url: string) {
 
                     const properties = Object.entries(inspection);
 
-                    if(properties.some(isNullOrUndefined)){
+                    if (properties.some(isNullOrUndefined)) {
                         return reject('Scraper pulled null or undefined data');
                     }
-                    
+
                     return inspection;
 
 

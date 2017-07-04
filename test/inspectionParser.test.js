@@ -30,6 +30,12 @@ describe('Inspection Parser', function() {
         ]);
     });
 
+    it.skip('should return a blank object if passed a non-existent complaint URL', function() {
+        let badURL = 'http://www2.tceq.texas.gov/oce/waci/index.cfm?fuseaction=home.complaint&incid=261417';
+
+        return assert.eventually.isEmpty(parseInspection(badURL));
+    })
+
 
     describe.skip('Result', function() {
 

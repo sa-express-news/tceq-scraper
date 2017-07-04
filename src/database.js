@@ -1,3 +1,5 @@
+'use strict';
+
 import { isInspectionObject, convertKeysToUnderscores } from './utility';
 
 import { db } from './dbConnect';
