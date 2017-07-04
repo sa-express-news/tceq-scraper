@@ -6,7 +6,7 @@
   "scripts": {
     "build": "./node_modules/.bin/babel src -d build",
     "start": "node build/index.js",
-    "prestart": "npm run build && npm run test",
+    "prestart": "npm run build",
     "flow": "flow",
     "test": "mocha -w --require babel-polyfill --compilers js:babel-register",
     "lint": "jshint .",
@@ -29,7 +29,10 @@
   "dependencies": {
     "dotenv": "^4.0.0",
     "jsdom": "^11.0.0",
-    "pg-promise": "^6.1.1"
+    "nodemailer": "^4.0.1",
+    "pg-promise": "^6.1.1",
+    "request": "^2.81.0",
+    "request-promise-native": "^1.0.4"
   },
   "pre-commit": [
     "flow"
