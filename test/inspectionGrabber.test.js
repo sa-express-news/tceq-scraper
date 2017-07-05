@@ -58,7 +58,7 @@ describe('Inspection Grabber', function() {
         ]);
     });
 
-    describe('Results', function() {
+    describe.skip('Results', function() {
         this.timeout(10000000);
         let results;
 
@@ -79,16 +79,32 @@ describe('Inspection Grabber', function() {
             });
         });
 
-        it('should be an array of complaint links', function(){
-        	results.forEach(function(item){
-        		assert.include(item, 'index.cfm?fuseaction=home.complaint&incid=');
-        	});
+        it('should be an array of complaint links', function() {
+            results.forEach(function(item) {
+                assert.include(item, 'index.cfm?fuseaction=home.complaint&incid=');
+            });
         });
 
-        it('should contain no duplicates', function(){
-        	let deduplicated = new Set(results);
+        it('should contain no duplicates', function() {
+            let deduplicated = new Set(results);
 
-        	assert.strictEqual(deduplicated.size, results.length);
+            assert.strictEqual(deduplicated.size, results.length);
+        });
+
+        it('should be an empty array if there were no complaints received that day', function() {
+
+            const noComplaints = {
+                start_date_month: 7,
+                start_date_day: 3,
+                start_date_year: 2017,
+                end_date_month: 7,
+                end_date_day: 4,
+                end_date_year: 2017,
+                doit: 'Find'
+            };
+
+            return assert.eventually.isEmpty(grabInspections(noComplaints));
+
         });
 
 
