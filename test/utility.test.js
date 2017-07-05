@@ -11,7 +11,7 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const assert = chai.assert;
 
-import { fetchPage, pageFromString, isString, isObject, extractIntegerFromString, dateFromString, isNullOrUndefined, convertKeysToUnderscores, prettyPrintObject, isInspectionObject, createRequestObject, deduplicateArray, isComplaintLink } from '../src/utility';
+import { fetchPage, pageFromString, isString, isObject, extractIntegerFromString, dateFromString, isNullOrUndefined, convertKeysToUnderscores, prettyPrintObject, prettyPrintObjectAsHTML, isInspectionObject, createRequestObject, deduplicateArray, isComplaintLink } from '../src/utility';
 
 const pageFetcher = fetchPage;
 
@@ -107,7 +107,8 @@ describe('Utilities', function() {
             const arrayOfStuff = [
                 [1, 2, 3], 'foo', 100, new Date(),
                 function a() {
-                    return null }
+                    return null
+                }
             ];
 
             arrayOfStuff.forEach(function(thing) {
@@ -294,6 +295,60 @@ describe('Utilities', function() {
         });
     });
 
+
+    describe('Object HTML pretty printer', function() {
+        const testObject = {
+            foo: 'bar',
+            baz: 100
+        };
+
+        it('should exist', function() {
+            assert.isDefined(prettyPrintObjectAsHTML);
+        });
+
+        it('should throw an error if passed a non-object', function() {
+            assert.throws(() => prettyPrintObjectAsHTML(5));
+            assert.throws(() => prettyPrintObjectAsHTML([5, 'foo', 'bar']));
+            assert.throws(() => prettyPrintObjectAsHTML(100));
+            assert.throws(() => prettyPrintObjectAsHTML(null));
+        });
+
+        it('should return a string', function() {
+            assert.isString(prettyPrintObjectAsHTML(testObject));
+        });
+
+        it('should wrap properties in <strong> tags', function() {
+            const object = { foo: 'bar', baz: 100 };
+
+            assert.include(prettyPrintObjectAsHTML(object), '<strong>foo:</strong>');
+            assert.include(prettyPrintObjectAsHTML(object), '<strong>baz:</strong>');
+        });
+
+        it('should wrap property/value pairs in <p> tags', function() {
+            const object = { foo: 'bar', baz: 100 };
+            const expected = '<p><strong>foo:</strong> bar</p><p><strong>baz:</strong> 100</p>';
+            assert.strictEqual(prettyPrintObjectAsHTML(object), expected);
+        });
+
+        it('should work with date values', function() {
+            let object = { foo: new Date('5/17/17'), bar: new Date('5/18/17') };
+            let expectedString = '<p><strong>foo:</strong> Wed May 17 2017 00:00:00 GMT-0500 (CDT)</p><p><strong>bar:</strong> Thu May 18 2017 00:00:00 GMT-0500 (CDT)</p>';
+            assert.strictEqual(prettyPrintObjectAsHTML(object), expectedString);
+        });
+
+        it('should work with array values', function() {
+            let object = { foo: [0, 1], bar: [1, 2] };
+            let expectedString = '<p><strong>foo:</strong> 0,1</p><p><strong>bar:</strong> 1,2</p>';
+            assert.strictEqual(prettyPrintObjectAsHTML(object), expectedString);
+        });
+
+        it('should work with nested objects', function() {
+            let object = { foo: { test: 'hello', test2: 'world' }, baz: 'test' }
+            let expectedString = '<p><strong>foo:</strong> {<p><strong>test:</strong> hello</p><p><strong>test2:</strong> world</p>}</p><p><strong>baz:</strong> test</p>';
+            assert.strictEqual(prettyPrintObjectAsHTML(object), expectedString);
+        });
+    })
+
     describe('Inspection object tester', function() {
         it('should exist', function() {
             assert.isDefined(isInspectionObject);
@@ -473,26 +528,28 @@ describe('Utilities', function() {
         });
     });
 
-    describe('Complaint link checker', function(){
-        it('should exist', function(){
+    describe('Complaint link checker', function() {
+        it('should exist', function() {
             assert.isDefined(isComplaintLink);
         });
 
-        it('should return false if the link is not a complaint link', function(){
+        it('should return false if the link is not a complaint link', function() {
             assert.isFalse(isComplaintLink('https://google.com'));
-            assert.isFalse(isComplaintLink([1,2]));
+            assert.isFalse(isComplaintLink([1, 2]));
             assert.isFalse(isComplaintLink('foobar'));
-            assert.isFalse(isComplaintLink(function(){return false}));
+            assert.isFalse(isComplaintLink(function() {
+                return false
+            }));
         });
 
-        it('should return true when passed a complaint link', function(){
+        it('should return true when passed a complaint link', function() {
             assert.isTrue(isComplaintLink('http://www2.tceq.texas.gov/oce/waci/index.cfm?fuseaction=home.complaint&incid=259738'));
             assert.isTrue(isComplaintLink('http://www2.tceq.texas.gov/oce/waci/index.cfm?fuseaction=home.complaint&incid=260571'));
             assert.isTrue(isComplaintLink('http://www2.tceq.texas.gov/oce/waci/index.cfm?fuseaction=home.complaint&incid=259636'));
             assert.isTrue(isComplaintLink('http://www2.tceq.texas.gov/oce/waci/index.cfm?fuseaction=home.complaint&incid=259669'));
             assert.isTrue(isComplaintLink('http://www2.tceq.texas.gov/oce/waci/index.cfm?fuseaction=home.complaint&incid=259699'));
 
-        })  
+        })
     });
 
 });

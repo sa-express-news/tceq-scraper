@@ -110,6 +110,27 @@ export function prettyPrintObject(object: Object) {
     }
 }
 
+export function prettyPrintObjectAsHTML(object: Object) {
+    if (Object.prototype.toString.call(object) !== '[object Object]') {
+        throw Error('variable passed to prettyPrintObject is not an object');
+    } else {
+        const entries = Object.entries(object);
+
+        const array = entries.map((entry: any) => {
+            if (Object.prototype.toString.call(entry[1]) === '[object Object]') {
+                entry[1] = `{${prettyPrintObjectAsHTML(entry[1])}}`;
+            }
+            let key = entry[0];
+            let value = entry[1].toString();
+            let string = `<p><strong>${key}:</strong> ${value}</p>`;
+            return string;
+        });
+
+        //remove the first newline
+        return array.join('');
+    }
+}
+
 export function isInspectionObject(object: Object) {
     if (Object.prototype.toString.call(object) !== '[object Object]') {
         return false;
@@ -186,6 +207,6 @@ export function deduplicateArray(array: Array < any > ) {
 
 }
 
-export function isComplaintLink(link: string){
+export function isComplaintLink(link: string) {
     return Object.prototype.toString.call(link) === "[object String]" && link.indexOf('index.cfm?fuseaction=home.complaint&incid=') !== -1;
 }
