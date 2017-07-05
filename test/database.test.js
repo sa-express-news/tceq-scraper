@@ -11,12 +11,12 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const assert = chai.assert;
 
-import { insertInspection, wipeTable } from '../src/database.js';
+import { insertComplaint, wipeTable } from '../src/database.js';
 import { db, pgp } from '../src/dbConnect';
 
 describe('Database', function() {
 
-    let inspectionObject = {
+    let complaintObject = {
         trackingNumber: 1555,
         dateReceived: new Date(),
         numberComplaining: 1,
@@ -38,7 +38,7 @@ describe('Database', function() {
     };
 
 
-    describe('Insert Inspection', function() {
+    describe('Insert Complaint', function() {
 
         afterEach(function() {
             wipeTable('complaints');
@@ -49,27 +49,27 @@ describe('Database', function() {
         });
 
         it('should exist', function() {
-            assert.isDefined(insertInspection);
+            assert.isDefined(insertComplaint);
         });
 
         it('should reject if not passed an object', function() {
             return Promise.all([
-                assert.isRejected(insertInspection('foobar')),
-                assert.isRejected(insertInspection(500)),
-                assert.isRejected(insertInspection(['foo', 'bar', undefined])),
-                assert.isRejected(insertInspection(null))
+                assert.isRejected(insertComplaint('foobar')),
+                assert.isRejected(insertComplaint(500)),
+                assert.isRejected(insertComplaint(['foo', 'bar', undefined])),
+                assert.isRejected(insertComplaint(null))
             ]);
         });
 
-        it('should reject if object passed does not have all inspection keys', function() {
+        it('should reject if object passed does not have all Complaint keys', function() {
             return Promise.all([
-                assert.isRejected(insertInspection({ foo: 'baz' })),
-                assert.isRejected(insertInspection({ trackingNumber: 522, dateReceived: new Date() }))
+                assert.isRejected(insertComplaint({ foo: 'baz' })),
+                assert.isRejected(insertComplaint({ trackingNumber: 522, dateReceived: new Date() }))
             ]);
         });
 
-        it.skip('should successfully insert the inspection object', function() {
-            insertInspection(inspectionObject)
+        it.skip('should successfully insert the Complaint object', function() {
+            insertComplaint(ComplaintObject)
                 .then(() => {
                     db.one('SELECT * FROM complaints', [true])
                         .then((data) => {
@@ -78,15 +78,15 @@ describe('Database', function() {
                 });
         });
 
-        it('should resolve with the inspection object on a successful INSERT', function() {
+        it('should resolve with the Complaint object on a successful INSERT', function() {
         
             //The test before this one finishes after this one starts.
             //We change the tracking number of the object for this test
             //So we don't insert a unique constraint that's already in
             //the DB (because the prior test hasn't finished yet).
-            inspectionObject.trackingNumber = 1556;
+            complaintObject.trackingNumber = 1556;
 
-            return assert.eventually.equal(insertInspection(inspectionObject), inspectionObject);
+            return assert.eventually.equal(insertComplaint(complaintObject), complaintObject);
         });
     });
 

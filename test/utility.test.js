@@ -11,7 +11,7 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const assert = chai.assert;
 
-import { fetchPage, pageFromString, isString, isObject, extractIntegerFromString, dateFromString, isNullOrUndefined, convertKeysToUnderscores, prettyPrintObject, prettyPrintObjectAsHTML, isInspectionObject, createRequestObject, deduplicateArray, isComplaintLink } from '../src/utility';
+import { fetchPage, pageFromString, isString, isObject, extractIntegerFromString, dateFromString, isNullOrUndefined, convertKeysToUnderscores, prettyPrintObject, prettyPrintObjectAsHTML, isComplaintObject, createRequestObject, deduplicateArray, isComplaintLink } from '../src/utility';
 
 const pageFetcher = fetchPage;
 
@@ -36,7 +36,7 @@ describe('Utilities', function() {
 
         it.skip('should return a Document object', function() {
 
-            const url = 'http://tx.healthinspections.us/san%20antonio/search.cfm?1=1&sd=06/12/2017&ed=06/19/2017&kw1=&kw2=&kw3=&rel1=L.licenseName&rel2=L.licenseName&rel3=L.licenseName&zc=&dtRng=YES&pre=similar&smoking=ANY';
+            const url = 'http://tx.healthComplaints.us/san%20antonio/search.cfm?1=1&sd=06/12/2017&ed=06/19/2017&kw1=&kw2=&kw3=&rel1=L.licenseName&rel2=L.licenseName&rel3=L.licenseName&zc=&dtRng=YES&pre=similar&smoking=ANY';
             return assert.eventually.typeOf(pageFetcher(url), 'Document');
 
         });
@@ -349,17 +349,17 @@ describe('Utilities', function() {
         });
     })
 
-    describe('Inspection object tester', function() {
+    describe('Complaint object tester', function() {
         it('should exist', function() {
-            assert.isDefined(isInspectionObject);
+            assert.isDefined(isComplaintObject);
         });
 
         it('should return false when passed a non-object', function() {
-            assert.isFalse(isInspectionObject('foo'));
-            assert.isFalse(isInspectionObject(500));
-            assert.isFalse(isInspectionObject([1, 2, 3]));
-            assert.isFalse(isInspectionObject(new Date()));
-            assert.isFalse(isInspectionObject(function() {
+            assert.isFalse(isComplaintObject('foo'));
+            assert.isFalse(isComplaintObject(500));
+            assert.isFalse(isComplaintObject([1, 2, 3]));
+            assert.isFalse(isComplaintObject(new Date()));
+            assert.isFalse(isComplaintObject(function() {
                 return true
             }));
         });
@@ -371,7 +371,7 @@ describe('Utilities', function() {
                 numberComplaining: 1
             };
 
-            assert.isFalse(isInspectionObject(badObject));
+            assert.isFalse(isComplaintObject(badObject));
         });
 
         it('should return false if the object has the keys PLUS unwanted ones', function() {
@@ -397,7 +397,7 @@ describe('Utilities', function() {
                 extra: 'foo'
             };
 
-            assert.isFalse(isInspectionObject(tooMuch));
+            assert.isFalse(isComplaintObject(tooMuch));
         });
 
         it('should retun true if the object has only the keys desired', function() {
@@ -422,7 +422,7 @@ describe('Utilities', function() {
                 actionTaken: 'foo'
             };
 
-            assert.isTrue(isInspectionObject(justRight));
+            assert.isTrue(isComplaintObject(justRight));
         });
     });
 

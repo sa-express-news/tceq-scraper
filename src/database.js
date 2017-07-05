@@ -1,17 +1,17 @@
 'use strict';
 
-import { isInspectionObject, convertKeysToUnderscores } from './utility';
+import { isComplaintObject, convertKeysToUnderscores } from './utility';
 
 import { db } from './dbConnect';
 
-export function insertInspection(inspection: Object) {
+export function insertComplaint(complaint: Object) {
     return new Promise((resolve, reject) => {
-        if (Object.prototype.toString.call(inspection) !== '[object Object]') {
-            return reject(`Variable passed to insertInspection is a ${typeof inspection} instead of an object`);
-        } else if (!isInspectionObject(inspection)) {
-            return reject(`Object passed to insertInspection does not match expected format`);
+        if (Object.prototype.toString.call(complaint) !== '[object Object]') {
+            return reject(`Variable passed to insertComplaint is a ${typeof complaint} instead of an object`);
+        } else if (!isComplaintObject(complaint)) {
+            return reject(`Object passed to insertComplaint does not match expected format`);
         } else {
-            const underscoreKeys = convertKeysToUnderscores(inspection);
+            const underscoreKeys = convertKeysToUnderscores(complaint);
 
             const values = Object.values(underscoreKeys);
 
@@ -20,7 +20,7 @@ export function insertInspection(inspection: Object) {
                     values: values
                 })
                 .then(() => {
-                    return inspection;
+                    return complaint;
                 })
                 .catch((error) => {
                     return error;

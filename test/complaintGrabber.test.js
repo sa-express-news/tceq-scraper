@@ -11,7 +11,7 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const assert = chai.assert;
 
-import { grabInspections } from '../src/inspectionGrabber';
+import { grabComplaints } from '../src/complaintGrabber';
 
 const dummyParams = {
     start_date_month: 6,
@@ -23,19 +23,19 @@ const dummyParams = {
     doit: 'Find'
 };
 
-describe('Inspection Grabber', function() {
+describe('Complaint Grabber', function() {
 
     it('should exist', function() {
-        assert.isDefined(grabInspections);
+        assert.isDefined(grabComplaints);
     });
 
     it('should reject if passed a non-object', function() {
 
         return Promise.all([
-            assert.isRejected(grabInspections(0)),
-            assert.isRejected(grabInspections('foo')),
-            assert.isRejected(grabInspections(new Date())),
-            assert.isRejected(grabInspections([0, 5]))
+            assert.isRejected(grabComplaints(0)),
+            assert.isRejected(grabComplaints('foo')),
+            assert.isRejected(grabComplaints(new Date())),
+            assert.isRejected(grabComplaints([0, 5]))
         ]);
     });
 
@@ -52,9 +52,9 @@ describe('Inspection Grabber', function() {
         };
 
         return Promise.all([
-            assert.isRejected(grabInspections(wayOff)),
-            assert.isRejected(grabInspections(close)),
-            assert.isRejected(grabInspections(closer))
+            assert.isRejected(grabComplaints(wayOff)),
+            assert.isRejected(grabComplaints(close)),
+            assert.isRejected(grabComplaints(closer))
         ]);
     });
 
@@ -63,7 +63,7 @@ describe('Inspection Grabber', function() {
         let results;
 
         before(function() {
-            return grabInspections(dummyParams)
+            return grabComplaints(dummyParams)
                 .then((result) => {
                     results = result;
                 });
@@ -103,7 +103,7 @@ describe('Inspection Grabber', function() {
                 doit: 'Find'
             };
 
-            return assert.eventually.isEmpty(grabInspections(noComplaints));
+            return assert.eventually.isEmpty(grabComplaints(noComplaints));
 
         });
 

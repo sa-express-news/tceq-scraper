@@ -131,7 +131,7 @@ export function prettyPrintObjectAsHTML(object: Object) {
     }
 }
 
-export function isInspectionObject(object: Object) {
+export function isComplaintObject(object: Object) {
     if (Object.prototype.toString.call(object) !== '[object Object]') {
         return false;
     } else {

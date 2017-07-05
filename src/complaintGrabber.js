@@ -12,13 +12,13 @@ const { JSDOM } = jsdom;
 //that can be used across multiple requests
 let cookieJar = rp.jar();
 
-export function grabInspections(params: Object) {
+export function grabComplaints(params: Object) {
     return new Promise((resolve, reject) => {
         if (!isObject(params)) {
-            return reject(`You didn't pass an object to grabInspections, instead passed a ${typeof params}`);
+            return reject(`You didn't pass an object to grabComplaints, instead passed a ${typeof params}`);
         }
         if (!hasRightParameters(params)) {
-            return reject(`Object passed to grabInspections doesn't have proper request parameters`);
+            return reject(`Object passed to grabComplaints doesn't have proper request parameters`);
         }
 
 

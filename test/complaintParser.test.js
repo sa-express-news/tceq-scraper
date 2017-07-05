@@ -11,29 +11,29 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const assert = chai.assert;
 
-import { parseInspection, extractInformation } from '../src/inspectionParser';
+import { parseComplaint, extractInformation } from '../src/complaintParser';
 // import { fetchPage } from '../src/utility';
 
 const url = 'http://www2.tceq.texas.gov/oce/waci/index.cfm?fuseaction=home.complaint&incid=259738';
 
-describe('Inspection Parser', function() {
+describe('Complaint Parser', function() {
     it('should exist', function() {
-        assert.isDefined(parseInspection);
+        assert.isDefined(parseComplaint);
     });
 
     it('should reject if passed a non-string', function() {
         return Promise.all([
-            assert.isRejected(parseInspection(0)),
-            assert.isRejected(parseInspection({ foo: 'bar' })),
-            assert.isRejected(parseInspection(new Date())),
-            assert.isRejected(parseInspection([0, 5]))
+            assert.isRejected(parseComplaint(0)),
+            assert.isRejected(parseComplaint({ foo: 'bar' })),
+            assert.isRejected(parseComplaint(new Date())),
+            assert.isRejected(parseComplaint([0, 5]))
         ]);
     });
 
     it.skip('should return a blank object if passed a non-existent complaint URL', function() {
         let badURL = 'http://www2.tceq.texas.gov/oce/waci/index.cfm?fuseaction=home.complaint&incid=261417';
 
-        return assert.eventually.isEmpty(parseInspection(badURL));
+        return assert.eventually.isEmpty(parseComplaint(badURL));
     })
 
 
@@ -44,7 +44,7 @@ describe('Inspection Parser', function() {
         let object;
 
         before(function() {
-            return parseInspection(url)
+            return parseComplaint(url)
                 .then((result) => {
                     object = result;
                 });
