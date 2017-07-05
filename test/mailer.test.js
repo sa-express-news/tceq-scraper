@@ -18,14 +18,14 @@ describe('Mail sender', function() {
         assert.isDefined(sendMail);
     });
 
-    it('should reject if not passed an inspection object', function() {
+    it('should reject if not passed an array of inspection objects', function() {
 
         const secondArgument = ['foo'];
 
         return Promise.all([
             assert.isRejected(sendMail({ foo: 'bar' }, secondArgument)),
             assert.isRejected(sendMail('foobar', secondArgument)),
-            assert.isRejected(sendMail([0, 1, 2], secondArgument)),
+            assert.isRejected(sendMail(inspectionObject, secondArgument)),
             assert.isRejected(sendMail(45, secondArgument)),
             assert.isRejected(sendMail(new Date(), secondArgument))
         ]);
