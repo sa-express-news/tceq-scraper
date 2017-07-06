@@ -45,7 +45,7 @@ export function parseComplaint(url: string) {
 
                 complaint.media = values[7];
 
-                complaint.program = values[8];
+                complaint.program = values[8].trim();
 
                 complaint.priority = values[9];
 
