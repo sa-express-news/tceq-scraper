@@ -45,7 +45,7 @@ describe('Database', function() {
         });
 
         after(function() {
-            pgp.end();
+            // pgp.end();
         });
 
         it('should exist', function() {
@@ -69,7 +69,7 @@ describe('Database', function() {
         });
 
         it.skip('should successfully insert the Complaint object', function() {
-            insertComplaint(ComplaintObject)
+            insertComplaint(complaintObject)
                 .then(() => {
                     db.one('SELECT * FROM complaints', [true])
                         .then((data) => {
