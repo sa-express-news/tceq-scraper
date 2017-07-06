@@ -5,7 +5,7 @@
 import { isObject, deduplicateArray, isComplaintLink } from './utility';
 
 const rp = require('request-promise-native');
-const jsdom = require("jsdom");
+const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 
 //Create a cookie jar to capture cookies from the server
@@ -13,15 +13,13 @@ const { JSDOM } = jsdom;
 let cookieJar = rp.jar();
 
 export function grabComplaints(params: Object) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         if (!isObject(params)) {
             return reject(`You didn't pass an object to grabComplaints, instead passed a ${typeof params}`);
         }
         if (!hasRightParameters(params)) {
             return reject(`Object passed to grabComplaints doesn't have proper request parameters`);
         }
-
-
 
         let postOptions = {
             method: 'POST',
@@ -48,7 +46,13 @@ export function grabComplaints(params: Object) {
                     complaintLinks = [complaintLinks, furtherResults].reduce((acc, cur) => acc.concat(cur));
                 }
 
-                return complaintLinks;
+                //Add leading http:// protocol and domain back to links, because the search results don't include them.
+
+                const completeComplaintLinks = complaintLinks.map((link)=>{
+                    return `http://www2.tceq.texas.gov/oce/waci/${link}`;
+                });
+
+                return completeComplaintLinks;
             })
             .catch(function(err) {
                 return err;
@@ -63,7 +67,7 @@ export function grabComplaints(params: Object) {
     //so we recursively call the same function, each time adding on the previous results
     //until there are no more left to parse.
     function getMorePages(searchPage: number) {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             let getOptions = {
                 method: 'GET',
                 uri: `http://www2.tceq.texas.gov/oce/waci/index.cfm?fuseaction=home.search&pageNumber=${searchPage}`,
