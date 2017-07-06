@@ -17,7 +17,9 @@ const pageFetcher = fetchPage;
 
 describe('Utilities', function() {
 
-    describe('Page Fetcher', function() {
+    describe.skip('Page Fetcher', function() {
+
+        this.timeout(100000000);
 
         it('should exist', function() {
             assert.isDefined(pageFetcher);
@@ -34,9 +36,9 @@ describe('Utilities', function() {
 
         });
 
-        it.skip('should return a Document object', function() {
+        it('should return a Document object', function() {
 
-            const url = 'http://tx.healthComplaints.us/san%20antonio/search.cfm?1=1&sd=06/12/2017&ed=06/19/2017&kw1=&kw2=&kw3=&rel1=L.licenseName&rel2=L.licenseName&rel3=L.licenseName&zc=&dtRng=YES&pre=similar&smoking=ANY';
+            const url = 'https://github.com/sa-express-news/tceq-scraper';
             return assert.eventually.typeOf(pageFetcher(url), 'Document');
 
         });
