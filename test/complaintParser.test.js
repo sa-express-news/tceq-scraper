@@ -1,10 +1,10 @@
 'use strict';
 
-//Tell Node not to freak out when I don't catch promise
-//rejections in tests
-process.on('unhandledRejection', function(reason, p) {
-    return;
-});
+// //Tell Node not to freak out when I don't catch promise
+// //rejections in tests
+// process.on('unhandledRejection', function(reason, p) {
+//     return;
+// });
 
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
@@ -30,14 +30,18 @@ describe('Complaint Parser', function() {
         ]);
     });
 
-    it.skip('should return a blank object if passed a non-existent complaint URL', function() {
-        let badURL = 'http://www2.tceq.texas.gov/oce/waci/index.cfm?fuseaction=home.complaint&incid=261417';
+    it('should reject if passed a non-existent complaint URL', function() {
+        this.timeout(1000000);
 
-        return assert.eventually.isEmpty(parseComplaint(badURL));
+        let badURL = 'http://www2.tceq.texas.gov/oce/waci/index.cfm?fuseaction=home.complaint&incid=150000';
+
+        return Promise.all([
+            assert.isRejected(parseComplaint(badURL))
+        ]);
     })
 
 
-    describe.skip('Result', function() {
+    describe('Result', function() {
 
         this.timeout(1000000);
 
@@ -187,7 +191,7 @@ describe('Complaint Parser', function() {
                 assert.isString(object.program);
             });
 
-            it.skip('should match one of the state programs', function() {
+            it('should match one of the state programs', function() {
                 const programs = [
                     'AIR QUALITY',
                     'EMERGENCY RESPONSE',
@@ -301,46 +305,6 @@ describe('Complaint Parser', function() {
                 assert.isString(object.actionTaken);
             });
         });
-
-    });
-});
-
-
-
-
-
-
-//PROBABLY DELETE THIS
-
-describe.skip('Information extractor', function() {
-    it('should exist', function() {
-        assert.isDefined(extractInformation);
-    });
-
-    it('should throw an error if passed a non-Document object', function() {
-
-        assert.throws(() => extractInformation(5));
-        assert.throws(() => extractInformation([5, 'foo', 'bar']));
-        assert.throws(() => extractInformation({ foo: 'bar' }));
-        assert.throws(() => extractInformation(null));
-    });
-
-    describe('results', function() {
-
-        let object;
-
-        before(function() {
-            return fetchPage(url)
-                .then((result) => {
-                    object = result;
-                });
-        });
-
-        it('should return an object', function() {
-            assert.isObject(extractInformation(object));
-        });
-
-
 
     });
 });

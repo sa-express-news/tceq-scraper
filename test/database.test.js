@@ -68,7 +68,7 @@ describe('Database', function() {
             ]);
         });
 
-        it.skip('should successfully insert the Complaint object', function() {
+        it('should successfully insert the Complaint object', function() {
             insertComplaint(complaintObject)
                 .then(() => {
                     db.one('SELECT * FROM complaints', [true])

@@ -17,7 +17,7 @@ const pageFetcher = fetchPage;
 
 describe('Utilities', function() {
 
-    describe.skip('Page Fetcher', function() {
+    describe('Page Fetcher', function() {
 
         this.timeout(100000000);
 
@@ -44,7 +44,7 @@ describe('Utilities', function() {
         });
     });
 
-    describe.skip('Page from string', function() {
+    describe('Page from string', function() {
 
         it('should exist', function() {
 
@@ -62,6 +62,7 @@ describe('Utilities', function() {
         });
 
         it('should return a Document object', function() {
+            const string = `<!DOCTYPE html><p>Hello world</p>`;
             assert.typeOf(pageFromString(string), 'string');
         });
     });

@@ -58,7 +58,7 @@ describe('Complaint Grabber', function() {
         ]);
     });
 
-    describe.skip('Results', function() {
+    describe('Results', function() {
         this.timeout(10000000);
         let results;
 

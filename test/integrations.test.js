@@ -19,7 +19,7 @@ import { createRequestObject, isComplaintObject } from '../src/utility';
 
 describe('Integration tests', function() {
     this.timeout(100000000);
-    describe.skip('Complaint Grabber -> Complaint Parser', function() {
+    describe('Complaint Grabber -> Complaint Parser', function() {
         describe('One page of results', function() {
             let requestParams, arrayOfComplaintLinks, arrayOfComplaints;
 
@@ -74,7 +74,7 @@ describe('Integration tests', function() {
         });
     });
 
-    describe.skip('Complaint Parser -> Database Insert', function() {
+    describe('Complaint Parser -> Database Insert', function() {
         before(async function() {
 
             const url = 'http://www2.tceq.texas.gov/oce/waci/index.cfm?fuseaction=home.complaint&incid=260575';
