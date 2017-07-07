@@ -23,7 +23,7 @@ export function parseComplaint(url: string) {
                 });
 
                 if (values.length === 0) {
-                    return complaint;
+                    reject('Scraper pulled null or undefined data');
                 }
 
                 complaint.trackingNumber = extractIntegerFromString(page.getElementsByClassName('waciListTitle')[0].textContent);
@@ -47,20 +47,19 @@ export function parseComplaint(url: string) {
 
                 complaint.program = values[8].trim();
 
-                complaint.priority = values[9];
+                complaint.priority = values[9].replace(/\s\s+/g, ' ');
 
-                //Remove ugly tabs and newlines in this property (but still space out separate effects)
-                complaint.effect = values[10].replace(/\t/g, '').replace(/\n/g, ' ');
+                complaint.effect = values[10].replace(/\s\s+/g, ' ').trim();
 
-                complaint.receivingWater = values[11];
+                complaint.receivingWater = values[11].trim();
 
-                complaint.regulatedEntity = values[12];
+                complaint.regulatedEntity = values[12].trim();
 
                 complaint.county = values[13];
 
-                complaint.description = values[14];
+                complaint.description = values[14].replace(/\s\s+/g, ' ').trim();
 
-                complaint.comment = values[15];
+                complaint.comment = values[15].replace(/\s\s+/g, ' ').trim();
 
                 complaint.actionTaken = values[16];
 
@@ -72,20 +71,10 @@ export function parseComplaint(url: string) {
 
                 resolve(complaint);
 
-            } catch(e){
-                console.log(e);
+            } catch (e) {
+                reject(`Failure in parseComplaint: ${e}`);
             }
 
         }
     });
 }
-
-// export function extractInformation(page: Object) {
-//     if (Object.prototype.toString.call(page) !== "[object Document]") {
-
-//         throw Error('variable passed to extractInformation is not a Document object');
-//     } else {
-
-
-//     }
-// }
