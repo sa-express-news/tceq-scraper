@@ -18,16 +18,15 @@ export function fetchPage(url: string) {
     });
 }
 
-// export function pageFromString(str: string) {
-//     if (Object.prototype.toString.call(str) !== "[object String]") {
+export function pageFromString(str: string) {
+    if (Object.prototype.toString.call(str) !== "[object String]") {
 
-//         throw Error('variable passed to pageFromString is not a string');
-//     } else{
-//         const dom = new JSDOM(string);
-//         console.log(dom.window.document.getElementsByClassName('waciListValue'));
-//         return dom.window.document;
-//     }
-// }
+        throw Error('variable passed to pageFromString is not a string');
+    } else{
+        const dom = new JSDOM(str);
+        return dom.window.document;
+    }
+}
 
 export function isString(item: string) {
     return Object.prototype.toString.call(item) === "[object String]";
@@ -174,21 +173,21 @@ export function isComplaintObject(object: Object) {
 }
 
 
-export function createRequestObject(date: Date) {
-    if (Object.prototype.toString.call(date) !== "[object Date]") {
+export function createRequestObject(endDate: Date, optionalStartDate: Date) {
+    if (Object.prototype.toString.call(endDate) !== "[object Date]") {
         throw Error('variable passed to createRequestObject is not a date');
     } else {
 
         const millisecondsInADay = 86400000;
-        const dayBefore = new Date(date.getTime() - millisecondsInADay);
+        const startDate = (!optionalStartDate) ? new Date(endDate.getTime() - millisecondsInADay) : optionalStartDate;
 
         let object = {
-            start_date_month: dayBefore.getMonth() + 1,
-            start_date_day: dayBefore.getDate(),
-            start_date_year: dayBefore.getFullYear(),
-            end_date_month: date.getMonth() + 1,
-            end_date_day: date.getDate(),
-            end_date_year: date.getFullYear(),
+            start_date_month: startDate.getMonth() + 1,
+            start_date_day: startDate.getDate(),
+            start_date_year: startDate.getFullYear(),
+            end_date_month: endDate.getMonth() + 1,
+            end_date_day: endDate.getDate(),
+            end_date_year: endDate.getFullYear(),
             doit: 'Find'
         };
         return object;
