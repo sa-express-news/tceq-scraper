@@ -4,10 +4,11 @@
 import 'babel-polyfill';
 
 import { sendMail } from './mailer';
-import { grabInspections } from './inspectionGrabber';
 import { createRequestObject } from './utility';
 
 require('dotenv').config();
+
+
 
 // let inspectionObject = {
 //     trackingNumber: 1555,
@@ -65,7 +66,9 @@ require('dotenv').config();
 // let requestObject = createRequestObject(new Date('6/6/17'));
 
 
-
+//COMPLAINTS CAN GET ADDED LATER IN THE DAY.
+//IF I DO 7/3 to 7/4 EARLY ON THE MORNING OF 7/5, I MAY NOT GET ALL THE COMPLAINTS I'D GET
+//DOING IT AT THE END OF THE DAY ON 7/5.
 
 //Generate an object with the proper date variables based on today's date
 
