@@ -11,7 +11,7 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const assert = chai.assert;
 
-import { sendMail } from '../src/mailer.js';
+import { sendMail } from '../../src/mailer.js';
 
 describe('Mail sender', function() {
     it('should exist', function() {

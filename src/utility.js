@@ -99,7 +99,13 @@ export function prettyPrintObject(object: Object) {
                 entry[1] = `{${prettyPrintObject(entry[1])}}`;
             }
             let key = entry[0];
-            let value = entry[1].toString();
+
+            //Use the value's toString() method, unless it's a date.
+            //With dates, toString() will cause problems when running
+            //The test suite on machines in different timezones, so we 
+            //use to GMTString() instead.
+
+            let value = Object.prototype.toString.call(entry[1]) === '[object Date]' ? entry[1].toGMTString() : entry[1].toString();
             let string = `\n${key}: ${value}`;
             return string;
         });
@@ -120,7 +126,13 @@ export function prettyPrintObjectAsHTML(object: Object) {
                 entry[1] = `{${prettyPrintObjectAsHTML(entry[1])}}`;
             }
             let key = entry[0];
-            let value = entry[1].toString();
+
+            //Use the value's toString() method, unless it's a date.
+            //With dates, toString() will cause problems when running
+            //The test suite on machines in different timezones, so we 
+            //use to GMTString() instead.
+
+            let value = Object.prototype.toString.call(entry[1]) === '[object Date]' ? entry[1].toGMTString() : entry[1].toString();
             let string = `<p><strong>${key}:</strong> ${value}</p>`;
             return string;
         });

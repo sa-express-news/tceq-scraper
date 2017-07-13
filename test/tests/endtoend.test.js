@@ -11,11 +11,11 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const assert = chai.assert;
 
-import { grabComplaints } from '../src/complaintGrabber';
-import { parseComplaint } from '../src/complaintParser';
-import { insertComplaint, wipeTable } from '../src/database';
-import { db } from '../src/dbConnect';
-import { createRequestObject, isComplaintObject } from '../src/utility';
+import { grabComplaints } from '../../src/complaintGrabber';
+import { parseComplaint } from '../../src/complaintParser';
+import { insertComplaint, wipeTable } from '../../src/database';
+import { db } from '../../src/dbConnect';
+import { createRequestObject, isComplaintObject } from '../../src/utility';
 
 //We don't test status, status date, frequency because those can get updated over time
 

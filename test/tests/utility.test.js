@@ -11,7 +11,7 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const assert = chai.assert;
 
-import { fetchPage, pageFromString, isString, isObject, extractIntegerFromString, dateFromString, isNullOrUndefined, convertKeysToUnderscores, prettyPrintObject, prettyPrintObjectAsHTML, isComplaintObject, createRequestObject, deduplicateArray, isComplaintLink } from '../src/utility';
+import { fetchPage, pageFromString, isString, isObject, extractIntegerFromString, dateFromString, isNullOrUndefined, convertKeysToUnderscores, prettyPrintObject, prettyPrintObjectAsHTML, isComplaintObject, createRequestObject, deduplicateArray, isComplaintLink } from '../../src/utility';
 
 const pageFetcher = fetchPage;
 
@@ -63,7 +63,7 @@ describe('Utilities', function() {
 
         it('should return a Document object', function() {
             const string = `<!DOCTYPE html><p>Hello world</p>`;
-            assert.typeOf(pageFromString(string), 'string');
+            assert.typeOf(pageFromString(string), 'Document');
         });
     });
 
@@ -281,7 +281,7 @@ describe('Utilities', function() {
 
         it('should work with date values', function() {
             let object = { foo: new Date('5/17/17'), bar: new Date('5/18/17') };
-            let expectedString = 'foo: Wed May 17 2017 00:00:00 GMT-0500 (CDT)\nbar: Thu May 18 2017 00:00:00 GMT-0500 (CDT)';
+            let expectedString = 'foo: Wed, 17 May 2017 05:00:00 GMT\nbar: Thu, 18 May 2017 05:00:00 GMT';
             assert.strictEqual(prettyPrintObject(object), expectedString);
         });
 
@@ -335,7 +335,7 @@ describe('Utilities', function() {
 
         it('should work with date values', function() {
             let object = { foo: new Date('5/17/17'), bar: new Date('5/18/17') };
-            let expectedString = '<p><strong>foo:</strong> Wed May 17 2017 00:00:00 GMT-0500 (CDT)</p><p><strong>bar:</strong> Thu May 18 2017 00:00:00 GMT-0500 (CDT)</p>';
+            let expectedString = '<p><strong>foo:</strong> Wed, 17 May 2017 05:00:00 GMT</p><p><strong>bar:</strong> Thu, 18 May 2017 05:00:00 GMT</p>';
             assert.strictEqual(prettyPrintObjectAsHTML(object), expectedString);
         });
 

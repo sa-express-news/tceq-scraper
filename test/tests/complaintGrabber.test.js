@@ -11,7 +11,7 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const assert = chai.assert;
 
-import { grabComplaints } from '../src/complaintGrabber';
+import { grabComplaints } from '../../src/complaintGrabber';
 
 const dummyParams = {
     start_date_month: 6,

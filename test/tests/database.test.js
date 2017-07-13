@@ -11,8 +11,8 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const assert = chai.assert;
 
-import { insertComplaint, wipeTable } from '../src/database.js';
-import { db, pgp } from '../src/dbConnect';
+import { insertComplaint, wipeTable } from '../../src/database.js';
+import { db } from '../../src/dbConnect';
 
 describe('Database', function() {
 
@@ -42,10 +42,6 @@ describe('Database', function() {
 
         afterEach(function() {
             wipeTable('complaints');
-        });
-
-        after(function() {
-            // pgp.end();
         });
 
         it('should exist', function() {

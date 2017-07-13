@@ -8,7 +8,7 @@
     "start": "node build/index.js",
     "prestart": "npm run build",
     "flow": "flow",
-    "test": "mocha -w --require babel-polyfill --compilers js:babel-register",
+    "test": "mocha test/test-suite.js --require babel-polyfill --compilers js:babel-register",
     "lint": "jshint .",
     "validate": "npm ls"
   },

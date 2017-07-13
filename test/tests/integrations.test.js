@@ -11,11 +11,11 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const assert = chai.assert;
 
-import { grabComplaints } from '../src/complaintGrabber';
-import { parseComplaint } from '../src/complaintParser';
-import { insertComplaint, wipeTable } from '../src/database';
-import { db, pgp } from '../src/dbConnect';
-import { createRequestObject, isComplaintObject } from '../src/utility';
+import { grabComplaints } from '../../src/complaintGrabber';
+import { parseComplaint } from '../../src/complaintParser';
+import { insertComplaint, wipeTable } from '../../src/database';
+import { db } from '../../src/dbConnect';
+import { createRequestObject, isComplaintObject } from '../../src/utility';
 
 describe('Integration tests', function() {
     this.timeout(100000000);
@@ -87,7 +87,6 @@ describe('Integration tests', function() {
 
         after(async function() {
             wipeTable('complaints');
-
         });
 
         it('should successfully insert the complaint', async function() {

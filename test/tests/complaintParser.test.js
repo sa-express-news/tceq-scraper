@@ -11,7 +11,7 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const assert = chai.assert;
 
-import { parseComplaint, extractInformation } from '../src/complaintParser';
+import { parseComplaint, extractInformation } from '../../src/complaintParser';
 // import { fetchPage } from '../src/utility';
 
 const url = 'http://www2.tceq.texas.gov/oce/waci/index.cfm?fuseaction=home.complaint&incid=259738';
