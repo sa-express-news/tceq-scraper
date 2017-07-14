@@ -55,6 +55,7 @@ export function grabComplaints(params: Object) {
                 return completeComplaintLinks;
             })
             .catch(function(err) {
+                console.log(err);
                 return err;
             }));
     });
@@ -95,6 +96,7 @@ export function grabComplaints(params: Object) {
 
                 })
                 .catch(function(err) {
+                    console.log(err);
                     return err;
                 }));
         });

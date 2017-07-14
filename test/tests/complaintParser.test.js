@@ -31,7 +31,6 @@ describe('Complaint Parser', function() {
     });
 
     it('should reject if passed a non-existent complaint URL', function() {
-        this.timeout(1000000);
 
         let badURL = 'http://www2.tceq.texas.gov/oce/waci/index.cfm?fuseaction=home.complaint&incid=150000';
 
@@ -42,8 +41,6 @@ describe('Complaint Parser', function() {
 
 
     describe('Result', function() {
-
-        this.timeout(1000000);
 
         let object;
 

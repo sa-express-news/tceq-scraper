@@ -8,7 +8,8 @@ process.on('unhandledRejection', function(reason, p) {
 
 import { pgp } from '../src/dbConnect';
 
-describe('test suite', function() {
+describe('Test suite', function() {
+    this.timeout(30000);
     after(function() {
         pgp.end();
     });

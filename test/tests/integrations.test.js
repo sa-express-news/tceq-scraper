@@ -18,7 +18,7 @@ import { db } from '../../src/dbConnect';
 import { createRequestObject, isComplaintObject } from '../../src/utility';
 
 describe('Integration tests', function() {
-    this.timeout(100000000);
+    this.timeout(30000);
     describe('Complaint Grabber -> Complaint Parser', function() {
         describe('One page of results', function() {
             let requestParams, arrayOfComplaintLinks, arrayOfComplaints;
@@ -32,7 +32,7 @@ describe('Integration tests', function() {
                 }));
             });
 
-            it('should return an array', async function() {
+            it('should return an array', function() {
                 assert.isArray(arrayOfComplaints);
             });
 
@@ -52,12 +52,12 @@ describe('Integration tests', function() {
 
                 requestParams = createRequestObject(new Date('6/21/17'));
                 arrayOfComplaintLinks = await grabComplaints(requestParams);
-                arrayOfComplaints = await Promise.all(arrayOfComplaintLinks.map(async(link) => {
+                arrayOfComplaints = await Promise.all(arrayOfComplaintLinks.map((link) => {
                     return parseComplaint(link);
                 }));
             });
 
-            it('should return an array', async function() {
+            it('should return an array', function() {
                 assert.isArray(arrayOfComplaints);
             });
 

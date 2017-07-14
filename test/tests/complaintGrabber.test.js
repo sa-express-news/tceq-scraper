@@ -59,7 +59,6 @@ describe('Complaint Grabber', function() {
     });
 
     describe('Results', function() {
-        this.timeout(10000000);
         let results;
 
         before(function() {

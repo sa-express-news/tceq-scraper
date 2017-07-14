@@ -21,13 +21,12 @@ import { createRequestObject, isComplaintObject } from '../../src/utility';
 
 describe('End-to-end tests', function() {
 
-    this.timeout(1000000000);
     describe('July 23-24 2016 - 2 complaints', function() {
 
         let complaints;
 
         before(async function() {
-            const requestParams = await createRequestObject(new Date('7/24/17'));
+            const requestParams = createRequestObject(new Date('7/24/17'));
 
             const complaintLinks = await grabComplaints(requestParams);
 
@@ -199,7 +198,7 @@ describe('End-to-end tests', function() {
         let complaints;
 
         before(async function() {
-            const requestParams = await createRequestObject(new Date('6/18/16'));
+            const requestParams = createRequestObject(new Date('6/18/16'));
 
             const complaintLinks = await grabComplaints(requestParams);
 

@@ -19,8 +19,6 @@ describe('Utilities', function() {
 
     describe('Page Fetcher', function() {
 
-        this.timeout(100000000);
-
         it('should exist', function() {
             assert.isDefined(pageFetcher);
         });
@@ -282,7 +280,7 @@ describe('Utilities', function() {
         it('should work with date values', function() {
             let object = { foo: new Date('5/17/17'), bar: new Date('5/18/17') };
             let expectedString = 'foo: Wed, 17 May 2017 05:00:00 GMT\nbar: Thu, 18 May 2017 05:00:00 GMT';
-            assert.strictEqual(prettyPrintObject(object), expectedString);
+            assert.equal(prettyPrintObject(object), expectedString);
         });
 
         it('should work with array values', function() {
@@ -342,7 +340,7 @@ describe('Utilities', function() {
         it('should work with array values', function() {
             let object = { foo: [0, 1], bar: [1, 2] };
             let expectedString = '<p><strong>foo:</strong> 0,1</p><p><strong>bar:</strong> 1,2</p>';
-            assert.strictEqual(prettyPrintObjectAsHTML(object), expectedString);
+            assert.equal(prettyPrintObjectAsHTML(object), expectedString);
         });
 
         it('should work with nested objects', function() {
