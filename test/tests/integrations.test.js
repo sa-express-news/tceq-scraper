@@ -76,27 +76,22 @@ describe('Integration tests', function() {
 
     describe('Complaint Parser -> Database Insert', function() {
         before(async function() {
-
             const url = 'http://www2.tceq.texas.gov/oce/waci/index.cfm?fuseaction=home.complaint&incid=260575';
-
             const complaintObject = await parseComplaint(url);
-
             const complaintInserted = await insertComplaint(complaintObject);
-
         });
 
-        after(async function() {
+        after(function() {
             wipeTable('complaints');
         });
 
+
         it('should successfully insert the complaint', async function() {
-
-            const complaint = await db.one(`SELECT * FROM complaints`, [true]);
-
-            assert.isDefined(complaint);
-
+            db.one('SELECT * FROM complaints', [true])
+                .then((data)=>{
+                    assert.isDefined(data);
+                });
         });
-
     });
 
 });

@@ -75,7 +75,7 @@ export function grabComplaints(params: Object) {
                 jar: cookieJar
             };
 
-            return resolve(rp(getOptions)
+            rp(getOptions)
                 .then(async function(body) {
                     let dom = new JSDOM(body);
                     let page = dom.window.document;
@@ -92,13 +92,13 @@ export function grabComplaints(params: Object) {
                         complaintLinks = [complaintLinks, nextPageOfLinks].reduce((acc, cur) => acc.concat(cur));
                     }
 
-                    return complaintLinks;
+                    resolve(complaintLinks);
 
                 })
                 .catch(function(err) {
                     console.log(err);
-                    return err;
-                }));
+                    reject(err);
+                });
         });
     }
 }

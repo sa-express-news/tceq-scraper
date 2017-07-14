@@ -279,8 +279,10 @@ describe('Utilities', function() {
 
         it('should work with date values', function() {
             let object = { foo: new Date('5/17/17'), bar: new Date('5/18/17') };
-            let expectedString = 'foo: Wed, 17 May 2017 05:00:00 GMT\nbar: Thu, 18 May 2017 05:00:00 GMT';
-            assert.equal(prettyPrintObject(object), expectedString);
+            let expectedStringA = 'foo: Wed May 17 2017';
+            let expectedStringB = 'bar: Thu May 18 2017';
+            assert.include(prettyPrintObject(object), expectedStringA);
+            assert.include(prettyPrintObject(object), expectedStringB);
         });
 
         it('should work with array values', function() {
@@ -333,8 +335,10 @@ describe('Utilities', function() {
 
         it('should work with date values', function() {
             let object = { foo: new Date('5/17/17'), bar: new Date('5/18/17') };
-            let expectedString = '<p><strong>foo:</strong> Wed, 17 May 2017 05:00:00 GMT</p><p><strong>bar:</strong> Thu, 18 May 2017 05:00:00 GMT</p>';
-            assert.strictEqual(prettyPrintObjectAsHTML(object), expectedString);
+            let expectedStringA = '<p><strong>foo:</strong> Wed May 17 2017';
+            let expectedStringB = '<p><strong>bar:</strong> Thu May 18 2017';
+            assert.include(prettyPrintObjectAsHTML(object), expectedStringA);
+            assert.include(prettyPrintObjectAsHTML(object), expectedStringB);
         });
 
         it('should work with array values', function() {

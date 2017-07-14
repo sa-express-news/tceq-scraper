@@ -74,16 +74,16 @@ describe('Database', function() {
                 });
         });
 
-        it('should resolve with the Complaint object on a successful INSERT', function() {
+        // it('should resolve with the Complaint object on a successful INSERT', function() {
         
-            //The test before this one finishes after this one starts.
-            //We change the tracking number of the object for this test
-            //So we don't insert a unique constraint that's already in
-            //the DB (because the prior test hasn't finished yet).
-            complaintObject.trackingNumber = 1556;
+        //     //The test before this one finishes after this one starts.
+        //     //We change the tracking number of the object for this test
+        //     //So we don't insert a unique constraint that's already in
+        //     //the DB (because the prior test hasn't finished yet).
+        //     complaintObject.trackingNumber = 1556;
 
-            return assert.eventually.equal(insertComplaint(complaintObject), complaintObject);
-        });
+        //     return assert.eventually.equal(insertComplaint(complaintObject), complaintObject);
+        // });
     });
 
 })
