@@ -1,7 +1,7 @@
 {
-  "name": "restaurant-inspections",
+  "name": "tceq-complaint-scraper",
   "version": "0.0.1",
-  "description": "Scraper to gather San Antonio restaurant inspections.",
+  "description": "Scraper to gather complaints to the Texas Commission on Environmental Quality.",
   "main": "index.js",
   "scripts": {
     "build": "./node_modules/.bin/babel src -d build",
