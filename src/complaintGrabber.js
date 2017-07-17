@@ -13,7 +13,7 @@ const { JSDOM } = jsdom;
 let cookieJar = rp.jar();
 
 export function grabComplaints(params: Object) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async(resolve, reject) => {
         if (!isObject(params)) {
             return reject(`You didn't pass an object to grabComplaints, instead passed a ${typeof params}`);
         }
@@ -48,7 +48,7 @@ export function grabComplaints(params: Object) {
 
                 //Add leading http:// protocol and domain back to links, because the search results don't include them.
 
-                const completeComplaintLinks = complaintLinks.map((link)=>{
+                const completeComplaintLinks = complaintLinks.map((link) => {
                     return `http://www2.tceq.texas.gov/oce/waci/${link}`;
                 });
 
@@ -68,7 +68,7 @@ export function grabComplaints(params: Object) {
     //so we recursively call the same function, each time adding on the previous results
     //until there are no more left to parse.
     function getMorePages(searchPage: number) {
-        return new Promise(async (resolve, reject) => {
+        return new Promise(async(resolve, reject) => {
             let getOptions = {
                 method: 'GET',
                 uri: `http://www2.tceq.texas.gov/oce/waci/index.cfm?fuseaction=home.search&pageNumber=${searchPage}`,
@@ -92,12 +92,12 @@ export function grabComplaints(params: Object) {
                         complaintLinks = [complaintLinks, nextPageOfLinks].reduce((acc, cur) => acc.concat(cur));
                     }
 
-                    resolve(complaintLinks);
+                    return resolve(complaintLinks);
 
                 })
                 .catch(function(err) {
                     console.log(err);
-                    reject(err);
+                    return reject(err);
                 });
         });
     }

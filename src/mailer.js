@@ -4,14 +4,14 @@ require('dotenv').config();
 
 const nodemailer = require('nodemailer');
 
-import { isInspectionObject, isString, prettyPrintObject, prettyPrintObjectAsHTML } from './utility';
+import { isComplaintObject, isString, prettyPrintObject, prettyPrintObjectAsHTML } from './utility';
 
 export function sendMail(inspections: Array < Object > , addresses: Array < string > ) {
     return new Promise((resolve, reject) => {
-        if (!Array.isArray(inspections) || !inspections.every(isInspectionObject)) {
-            reject(`You did not pass an array of inspections to sendMail, instead passed a ${typeof inspections}: ${inspections}`);
+        if (!Array.isArray(inspections)) {
+            return reject(`You did not pass an array of complaints to sendMail, instead passed a ${typeof inspections}: ${inspections}`);
         } else if (!Array.isArray(addresses) || !addresses.every(isString)) {
-            reject(`You didn't pass an array of email addresses to sendMail, instead passed a ${typeof addresses}`);
+            return reject(`You didn't pass an array of email addresses to sendMail, instead passed a ${typeof addresses}`);
         } else {
             let transporter = nodemailer.createTransport({
                 host: process.env.EMAIL_HOST,
@@ -37,15 +37,11 @@ export function sendMail(inspections: Array < Object > , addresses: Array < stri
                 html: emailHTML
             };
 
-            // console.log(mailOptions);
-
-            // return resolve('foo');
-
             transporter.sendMail(mailOptions, (error, info) => {
                if (error) {
-                   reject(error);
+                   return reject(error);
                }
-               resolve(inspections);
+               return resolve(inspections);
            });
         }
     })

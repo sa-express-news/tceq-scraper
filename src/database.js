@@ -20,10 +20,10 @@ export function insertComplaint(complaint: Object) {
                     values: values
                 })
                 .then((result) => {
-                    resolve(complaint);
+                    return resolve(complaint);
                 })
                 .catch((error) => {
-                    reject(error);
+                    return reject(error);
                 });
         }
     })

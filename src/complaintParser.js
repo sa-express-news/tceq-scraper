@@ -8,7 +8,7 @@ export function parseComplaint(url: string) {
     return new Promise(async(resolve, reject) => {
         if (!isString(url)) {
 
-            reject('Non-string passed to complaintParser.js');
+            return reject('Non-string passed to complaintParser.js');
         } else {
 
             try {
@@ -23,7 +23,7 @@ export function parseComplaint(url: string) {
                 });
 
                 if (values.length === 0) {
-                    reject('Scraper pulled null or undefined data');
+                    return reject('Scraper pulled null or undefined data');
                 }
 
                 complaint.trackingNumber = extractIntegerFromString(page.getElementsByClassName('waciListTitle')[0].textContent);
@@ -57,6 +57,16 @@ export function parseComplaint(url: string) {
 
                 complaint.county = values[13];
 
+                //Get an object full of the four tables we want
+
+                // const tableObject = page.getElementsByClassName('waciDetail');
+
+                // //Get an array
+
+                // const tableArray = Object.values(tableObject).map((element: any)=>{
+                //     return element
+                // })
+
                 complaint.description = values[14].replace(/\s\s+/g, ' ').trim();
 
                 complaint.comment = values[15].replace(/\s\s+/g, ' ').trim();
@@ -66,13 +76,13 @@ export function parseComplaint(url: string) {
                 const properties = Object.entries(complaint);
 
                 if (properties.some(isNullOrUndefined)) {
-                    reject('Scraper pulled null or undefined data');
+                    return reject('Scraper pulled null or undefined data');
                 }
 
-                resolve(complaint);
+                return resolve(complaint);
 
             } catch (e) {
-                reject(`Failure in parseComplaint: ${e}`);
+                return reject(`Failure in parseComplaint: ${e}`);
             }
 
         }
