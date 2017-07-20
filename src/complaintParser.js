@@ -107,6 +107,9 @@ export function parseComplaint(url: string) {
                 })
 
 
+                complaint.url = `http://www2.tceq.texas.gov/oce/waci/index.cfm?fuseaction=home.complaint&incid=${complaint.trackingNumber}`;
+
+
                 return resolve(complaint);
 
                 //     const properties = Object.entries(complaint);
