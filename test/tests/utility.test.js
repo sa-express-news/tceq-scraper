@@ -424,7 +424,8 @@ describe('Utilities', function() {
                 county: 'foo',
                 description: 'foo',
                 comment: 'foo',
-                actionTaken: 'foo'
+                actionTaken: 'foo',
+                url: 'foo'
             };
 
             assert.isTrue(isComplaintObject(justRight));
