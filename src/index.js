@@ -2,69 +2,14 @@
 'use strict';
 
 import 'babel-polyfill';
+import { scrapeDaily } from './dailyScrape';
 
-import { sendMail } from './mailer';
-import { createRequestObject } from './utility';
-
-require('dotenv').config();
-
-
-
-// let inspectionObject = {
-//     trackingNumber: 1555,
-//     dateReceived: new Date(),
-//     numberComplaining: 1,
-//     status: 'Good',
-//     statusDate: new Date(),
-//     nature: 'foo',
-//     frequency: 'foo',
-//     duration: 'foo',
-//     media: 'foo',
-//     program: 'foo',
-//     priority: 'foo',
-//     effect: 'foo',
-//     receivingWater: 'foo',
-//     regulatedEntity: 'foo',
-//     county: 'foo',
-//     description: 'foo',
-//     comment: 'foo',
-//     actionTaken: 'foo'
-// };
-
-// let inspectionObject2 = {
-//     trackingNumber: 1556,
-//     dateReceived: new Date(),
-//     numberComplaining: 1,
-//     status: 'Good',
-//     statusDate: new Date(),
-//     nature: 'foo',
-//     frequency: 'foo',
-//     duration: 'foo',
-//     media: 'foo',
-//     program: 'foo',
-//     priority: 'foo',
-//     effect: 'foo',
-//     receivingWater: 'foo',
-//     regulatedEntity: 'foo',
-//     county: 'foo',
-//     description: 'foo',
-//     comment: 'foo',
-//     actionTaken: 'foo'
-// };
-
-// const arrayOfInspections = [inspectionObject, inspectionObject2];
-// const emailRecipients = process.env.EMAIL_RECIPIENTS.split(',');
-
-// sendMail(arrayOfInspections, emailRecipients)
-//     .then((result) => {
-//         console.log('email sent');
-//     });
-
-
-
-// //Object with parameters to send to the search form
-// let requestObject = createRequestObject(new Date('6/6/17'));
-
+scrapeDaily()
+    .then((result) => {
+        console.log('dones');
+    }).catch((err) => {
+        console.log('error', err);
+    });
 
 //COMPLAINTS CAN GET ADDED LATER IN THE DAY.
 //IF I DO 7/3 to 7/4 EARLY ON THE MORNING OF 7/5, I MAY NOT GET ALL THE COMPLAINTS I'D GET

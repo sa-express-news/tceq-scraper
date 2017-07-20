@@ -27,7 +27,7 @@ describe('Integration tests', function() {
 
                 requestParams = createRequestObject(new Date('7/4/17'));
                 arrayOfComplaintLinks = await grabComplaints(requestParams);
-                arrayOfComplaints = await Promise.all(arrayOfComplaintLinks.map(async(link) => {
+                arrayOfComplaints = await Promise.all(arrayOfComplaintLinks.map((link) => {
                     return parseComplaint(link);
                 }));
             });
@@ -46,6 +46,7 @@ describe('Integration tests', function() {
         });
 
         describe('Multiple pages of results', function() {
+            this.timeout(60000);
             let requestParams, arrayOfComplaintLinks, arrayOfComplaints;
 
             before(async function() {
@@ -81,14 +82,14 @@ describe('Integration tests', function() {
             const complaintInserted = await insertComplaint(complaintObject);
         });
 
-        after(function() {
-            wipeTable('complaints');
-        });
+        // after(function() {
+        //     wipeTable('complaints');
+        // });
 
 
         it('should successfully insert the complaint', async function() {
             db.one('SELECT * FROM complaints', [true])
-                .then((data)=>{
+                .then((data) => {
                     assert.isDefined(data);
                 });
         });

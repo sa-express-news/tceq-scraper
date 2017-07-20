@@ -6,10 +6,10 @@ const nodemailer = require('nodemailer');
 
 import { isComplaintObject, isString, prettyPrintObject, prettyPrintObjectAsHTML } from './utility';
 
-export function sendMail(inspections: Array < Object > , addresses: Array < string > ) {
+export function sendMail(complaints: Array < Object > , addresses: Array < string > ) {
     return new Promise((resolve, reject) => {
-        if (!Array.isArray(inspections)) {
-            return reject(`You did not pass an array of complaints to sendMail, instead passed a ${typeof inspections}: ${inspections}`);
+        if (!Array.isArray(complaints)) {
+            return reject(`You did not pass an array of complaints to sendMail, instead passed a ${typeof complaints}: ${complaints}`);
         } else if (!Array.isArray(addresses) || !addresses.every(isString)) {
             return reject(`You didn't pass an array of email addresses to sendMail, instead passed a ${typeof addresses}`);
         } else {
@@ -21,11 +21,11 @@ export function sendMail(inspections: Array < Object > , addresses: Array < stri
                 tls: { ciphers: 'SSLv3' }
             });
 
-            let emailHTML = inspections.map((inspection)=>{
+            let emailHTML = complaints.map((inspection) => {
                 return prettyPrintObjectAsHTML(inspection);
             }).join('<br/><br/>');
 
-            let emailText = inspections.map((inspection)=>{
+            let emailText = complaints.map((inspection) => {
                 return prettyPrintObject(inspection);
             }).join('');
 
@@ -37,12 +37,13 @@ export function sendMail(inspections: Array < Object > , addresses: Array < stri
                 html: emailHTML
             };
 
-            transporter.sendMail(mailOptions, (error, info) => {
-               if (error) {
-                   return reject(error);
-               }
-               return resolve(inspections);
-           });
+            transporter.sendMail(mailOptions)
+                .then((result) => {
+                    return resolve(complaints);
+                })
+                .catch((error) => {
+                    return reject(error);
+                });
         }
     })
 

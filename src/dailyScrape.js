@@ -16,78 +16,39 @@ require('dotenv').config();
 export async function scrapeDaily() {
     return new Promise(async(resolve, reject) => {
         try {
-            const requestObject = createRequestObject(new Date('12/14/16'));
+            //Build a request object
+            const requestParams = createRequestObject(new Date('6/18/16'));
 
-            const complaintListObject = await grabComplaints(requestObject);
+            //Grab links to all the complaints for the given range
+            const complaintListObject = await grabComplaints(requestParams);
 
-            const complaintList = Object.values(complaintListObject);
+            //Turn the object into an array
+            const complaintLinks = Object.values(complaintListObject);
 
-            const arrayOfComplaints = await Promise.all(complaintList.map((url) => {
-                    return parseComplaint(url);
-                }))
-                .catch((error) => {
-                    // console.log(error);
-                    return reject(error);
-                });
+            //Move through the array, parsing every complaint
+            const arrayOfComplaints = await Promise.all(complaintLinks.map((url) => {
+                return parseComplaint(url);
+            }));
 
+            //Insert every complaint into the database
+            const insertComplaints = await Promise.all(arrayOfComplaints.map((complaint) => {
+                return insertComplaint(complaint);
+            }));
 
-
-            const insertComplaints = await Promise.all(arrayOfComplaints.forEach((complaint) => {
-                    insertComplaint(complaint)
-                        .then((result) => {
-                            return (result);
-                        }).catch((error) => {
-                            return (error);
-                        });
-                }))
-                .catch((error) => {
-                    // console.log(error);
-                    return reject(error);
-                });
-
+            //Disconnect from the database
             pgp.end();
-
-            // const complaintData = await parseComplaint(complaintList[0]);
-            // let complaintInserted = await insertComplaint(complaintData);
 
             const emailRecipients = process.env.EMAIL_RECIPIENTS.split(',');
 
-            // console.log(arrayOfComplaints);
+            //Send the complaints as an email
+            const sentMail = await sendMail(arrayOfComplaints, emailRecipients);
 
-            sendMail(arrayOfComplaints, emailRecipients)
-                .then((result)=>{
-                    return resolve(true);
-                })
-                .catch((error)=>{
-                    return reject(error);
-                });
-
-            // let mailSent = await sendMail(arrayOfComplaints, emailRecipients);
-            // return resolve(true);
-
-
-
+            return resolve(true);
         } catch (e) {
+            console.log('catching', e);
             return reject(e);
         }
 
 
     })
 }
-
-// export default class DailyScraper {
-//     async scrapeDaily() {
-//         const requestObject = createRequestObject(new Date());
-
-//         const complaintList = await grabComplaints(requestObject);
-
-//         complaintList.forEach((complaint) => {
-//             let complaintData = await parseComplaint(complaint);
-//             let complaintInserted = await insertComplaint(complaintData);
-//         });
-
-//         const emailRecipients = process.env.EMAIL_RECIPIENTS.split(',');
-
-//         let mailSent = await sendMail(complaintList);
-//     }
-// }
