@@ -10,9 +10,12 @@ export function fetchPage(url: string) {
         if (Object.prototype.toString.call(url) !== "[object String]") {
             return reject('Variable passed to fetchPage is not a string');
         } else {
-            JSDOM.fromURL(url).then(dom => {
+            JSDOM.fromURL(url)
+            .then(dom => {
                 const page = dom.window.document;
                 return resolve(page);
+            }).catch((error)=>{
+                return reject(error);
             });
         }
     });
@@ -155,7 +158,8 @@ export function isComplaintObject(object: Object) {
             'county',
             'description',
             'comment',
-            'actionTaken'
+            'actionTaken',
+            'url'
         ];
 
         const objectProperties = Object.keys(object);
