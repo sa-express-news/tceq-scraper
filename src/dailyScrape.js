@@ -17,7 +17,7 @@ export async function scrapeDaily() {
     return new Promise(async(resolve, reject) => {
         try {
             //Build a request object
-            const requestParams = createRequestObject(new Date('6/18/16'));
+            const requestParams = createRequestObject(new Date());
 
             //Grab links to all the complaints for the given range
             const complaintListObject = await grabComplaints(requestParams);
