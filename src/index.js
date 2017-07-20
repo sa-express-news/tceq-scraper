@@ -6,7 +6,7 @@ import { scrapeDaily } from './dailyScrape';
 
 scrapeDaily()
     .then((result) => {
-        console.log('dones');
+        console.log('Sent an email');
     }).catch((err) => {
         console.log('error', err);
     });

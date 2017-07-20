@@ -14,9 +14,6 @@ export function insertComplaint(complaint: Object) {
             const underscoreKeys = convertKeysToUnderscores(complaint);
 
             const values = Object.values(underscoreKeys);
-
-            console.log('entering db.none');
-
             // db.none({
             //         text: 'INSERT INTO complaints VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)',
             //         values: values
