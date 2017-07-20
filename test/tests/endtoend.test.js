@@ -26,7 +26,7 @@ describe('End-to-end tests', function() {
         let complaints;
 
         before(async function() {
-            const requestParams = createRequestObject(new Date('7/24/17'));
+            const requestParams = createRequestObject(new Date('7/24/16'));
 
             const complaintLinks = await grabComplaints(requestParams);
 
@@ -194,6 +194,8 @@ describe('End-to-end tests', function() {
     });
 
     describe('June 17-18 2016 - 27 complaints', function() {
+
+        this.timeout(60000);
 
         let complaints;
 
@@ -752,7 +754,7 @@ describe('End-to-end tests', function() {
                 	'The complainant has been contacted regarding the referral of this complaint.',
                 	'The complainant has been contacted regarding the referral of this complaint.',
                 	'This complaint has been assigned and will be further investigated by an Environmental Investigator.',
-                	null,
+                	'',
                 	'This complaint has been assigned and will be further investigated by an Environmental Investigator.',
                 	'No data available.',
                 	'This complaint has been assigned and will be further investigated by an Environmental Investigator.',
