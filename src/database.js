@@ -5,7 +5,7 @@ import { isComplaintObject, convertKeysToUnderscores } from './utility';
 import { db } from './dbConnect';
 
 export function insertComplaint(complaint: Object) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async(resolve, reject) => {
         if (Object.prototype.toString.call(complaint) !== '[object Object]') {
             return reject(`Variable passed to insertComplaint is a ${typeof complaint} instead of an object`);
         } else if (!isComplaintObject(complaint)) {
@@ -15,16 +15,30 @@ export function insertComplaint(complaint: Object) {
 
             const values = Object.values(underscoreKeys);
 
-            db.none({
-                    text: 'INSERT INTO complaints VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)',
+            console.log('entering db.none');
+
+            // db.none({
+            //         text: 'INSERT INTO complaints VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)',
+            //         values: values
+            //     })
+            //     .then((result) => {
+            //         console.log('about to resolve from DB');
+            //         return resolve(complaint);
+            //     })
+            //     .catch((error) => {
+            //         return reject(error);
+            //     });
+
+            try {
+                let insert = await db.none({
+                    text: 'INSERT INTO complaints VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)',
                     values: values
-                })
-                .then((result) => {
-                    return resolve(complaint);
-                })
-                .catch((error) => {
-                    return reject(error);
                 });
+                return resolve(complaint);
+            }catch(e){
+                return reject(e);
+            }
+
         }
     })
 }
