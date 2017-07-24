@@ -6,7 +6,11 @@ import { scrapeDaily } from './dailyScrape';
 
 scrapeDaily()
     .then((result) => {
-        console.log('Sent an email');
+        if (result === true) {
+            console.log('Sent an email');
+        } else {
+            console.log('Nothing to scrape for date range provided');
+        }
     }).catch((err) => {
         console.log('error', err);
     });

@@ -25,6 +25,10 @@ export async function scrapeDaily() {
             //Turn the object into an array
             const complaintLinks = Object.values(complaintListObject);
 
+            if(complaintLinks.length === 0){
+                return resolve(false);
+            }
+
             //Move through the array, parsing every complaint
             const arrayOfComplaints = await Promise.all(complaintLinks.map((url) => {
                 return parseComplaint(url);
