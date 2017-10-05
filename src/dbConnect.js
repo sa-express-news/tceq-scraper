@@ -6,7 +6,7 @@ const pgp = require('pg-promise')();
 const dbOptions = {
     host: process.env.HOST,
     port: 5432,
-    database: process.env.DB,
+    database: process.env.ENVIRONMENT === 'TEST' ? process.env.TEST_DB : process.env.DB,
     user: process.env.DB_USER,
     password: process.env.PASSWORD,
     poolSize: 10
