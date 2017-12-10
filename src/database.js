@@ -5,7 +5,7 @@ import { isComplaintObject, convertKeysToUnderscores } from './utility';
 import { db } from './dbConnect';
 
 export function insertComplaint(complaint: Object) {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         if (Object.prototype.toString.call(complaint) !== '[object Object]') {
             return reject(`Variable passed to insertComplaint is a ${typeof complaint} instead of an object`);
         } else if (!isComplaintObject(complaint)) {
@@ -28,11 +28,11 @@ export function insertComplaint(complaint: Object) {
 
             try {
                 let insert = await db.none({
-                    text: 'INSERT INTO complaints VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)',
+                    text: 'INSERT INTO complaints VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19) ON CONFLICT (tracking_number) DO NOTHING',
                     values: values
                 });
                 return resolve(complaint);
-            }catch(e){
+            } catch (e) {
                 return reject(e);
             }
 
